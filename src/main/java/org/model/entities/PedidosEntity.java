@@ -2,28 +2,59 @@ package org.model.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.enums.StatusPedido;
 
-import org.interfaces.StatusPedido;
+public class PedidoEntity {
 
-public class PedidosEntity {
-	private Integer id;
-	private ClienteEntity cliente;
-	private final List <ItemEntity> itens = new ArrayList<>();
-	private String status;
-	
-	public PedidosEntity(Integer id, ClienteEntity cliente) {
-		this.id = id;
-		this.cliente = cliente;
-		this.status = StatusPedido.CRIADO;
-	}
+    private Integer id;
+    private ClienteEntity cliente;
+    private final List<ItemEntity> itens = new ArrayList<>();
+    private StatusPedido status;
 
-	public Integer getId() {
-		return id;
-	}
+   
+    public PedidoEntity() {
+        this.status = StatusPedido.CRIADO;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	
-	
+    public PedidoEntity(Integer id, ClienteEntity cliente) {
+        this();
+        this.id = id;
+        this.cliente = cliente;
+    }
+
+
+    public void adicionarItem(ItemEntity item) {
+        if (item != null) {
+            this.itens.add(item);
+        }
+    }
+
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public ClienteEntity getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(ClienteEntity cliente) {
+        this.cliente = cliente;
+    }
+
+    public StatusPedido getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusPedido status) {
+        this.status = status;
+    }
+
+    public List<ItemEntity> getItens() {
+        return itens;
+    }
 }
