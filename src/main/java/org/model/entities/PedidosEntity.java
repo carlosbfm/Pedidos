@@ -1,6 +1,7 @@
 package org.model.entities;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import org.enums.StatusPedido;
 
@@ -10,16 +11,18 @@ public class PedidosEntity {
     private ClienteEntity cliente;
     private final List<ItemEntity> itens = new ArrayList<>();
     private StatusPedido status;
+    private PagamentoEntity formaPagamento;
 
    
     public PedidosEntity() {
         this.status = StatusPedido.CRIADO;
     }
 
-    public PedidosEntity(Integer id, ClienteEntity cliente) {
+    public PedidosEntity(Integer id, ClienteEntity cliente, PagamentoEntity pagamento) {
         this();
         this.id = id;
         this.cliente = cliente;
+        this.formaPagamento = pagamento;
     }
 
 

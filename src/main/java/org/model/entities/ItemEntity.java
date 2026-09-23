@@ -1,9 +1,10 @@
 package org.model.entities;
 
 import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
 
-import org.interfaces.UnidadeDeMedida;
+import org.enums.UnidadeDeMedida;
 
 public class ItemEntity {
 	private Integer id;
@@ -84,7 +85,4 @@ public class ItemEntity {
 		return dataHoraEmissao;
 	}
 
-	
-	
-	
 }

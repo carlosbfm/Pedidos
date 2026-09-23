@@ -1,9 +1,24 @@
-package org.interfaces;
+package org.enums;
 
-public interface UnidadeDeMedida {
-	String UND = "UNIDADE";
-	String PCT = "PACOTE";
-	String CX = "CAIXA";
-	String AMP = "ÂMPOLA";
+public enum UnidadeDeMedida {
+	UND("UNIDADE"),
+	PCT("PACOTE"),
+	CX("CAIXA"),
+	AMP("ÂMPOLA");
 	
+    private final String descricao;
+    
+    UnidadeDeMedida(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    @Override
+    public String toString() {
+        return descricao;
+    }
+
 }
