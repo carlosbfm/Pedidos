@@ -20,6 +20,10 @@ public class ClienteEntity {
 		this.dataCadastroCliente = dataCadastro;
 	}
 
+	public LocalDateTime getDataCadastroCliente() {
+		return dataCadastroCliente;
+	}
+
 	public Integer getId() {
 		return id;
 	}

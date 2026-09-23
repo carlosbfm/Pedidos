@@ -3,6 +3,9 @@ package org.model.entities;
 import java.util.ArrayList;
 
 import java.util.List;
+
+import javax.persistence.Embedded;
+
 import org.enums.StatusPedido;
 
 public class PedidosEntity {
@@ -11,6 +14,7 @@ public class PedidosEntity {
     private ClienteEntity cliente;
     private final List<ItemEntity> itens = new ArrayList<>();
     private StatusPedido status;
+    @Embedded
     private PagamentoEntity formaPagamento;
 
    
@@ -49,7 +53,15 @@ public class PedidosEntity {
         this.cliente = cliente;
     }
 
-    public StatusPedido getStatus() {
+    public PagamentoEntity getFormaPagamento() {
+		return formaPagamento;
+	}
+
+	public void setFormaPagamento(PagamentoEntity pagamento) {
+		this.formaPagamento = pagamento;
+	}
+
+	public StatusPedido getStatus() {
         return status;
     }
 
