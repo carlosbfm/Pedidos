@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.enums.StatusPedido;
 
-public class PedidoEntity {
+public class PedidosEntity {
 
     private Integer id;
     private ClienteEntity cliente;
@@ -12,11 +12,11 @@ public class PedidoEntity {
     private StatusPedido status;
 
    
-    public PedidoEntity() {
+    public PedidosEntity() {
         this.status = StatusPedido.CRIADO;
     }
 
-    public PedidoEntity(Integer id, ClienteEntity cliente) {
+    public PedidosEntity(Integer id, ClienteEntity cliente) {
         this();
         this.id = id;
         this.cliente = cliente;
