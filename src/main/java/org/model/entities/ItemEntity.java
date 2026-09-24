@@ -18,13 +18,12 @@ public class ItemEntity {
 		this.dataHoraEmissao = LocalDateTime.now();
 	}
 
-	public ItemEntity(Integer id, String nomeItem, BigDecimal precoItem, UnidadeDeMedida tipoUnidadeDeMedida,Integer quantidade, LocalDateTime dataHora) {
-		this.id = id;
+	public ItemEntity( String nomeItem, BigDecimal precoItem, UnidadeDeMedida tipoUnidadeDeMedida,Integer quantidade, LocalDateTime dataHora) {
 		this.nomeItem = nomeItem;
 		this.precoItem = precoItem;
-		this.tipoUnidadeDeMedida = tipoUnidadeDeMedida;
 		this.quantidadeDoItem = (quantidade != null) ? quantidade : 0;
-		this.dataHoraEmissao = (dataHora != null) ? dataHora : LocalDateTime.now();
+		this.tipoUnidadeDeMedida = tipoUnidadeDeMedida;
+		this.dataHoraEmissao = LocalDateTime.now();
 	}
 
 	public Integer getId() {
