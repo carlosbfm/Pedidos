@@ -2,6 +2,7 @@ package org.action;
 
 import java.math.BigDecimal;
 
+
 import org.enums.UnidadeDeMedida;
 import org.mentawai.core.BaseAction;
 import org.model.entities.ItemEntity;
@@ -16,14 +17,14 @@ public class ItemAction extends BaseAction {
 	public String cadastrar() {
 		System.out.println(">>> ENTROU NO CADASTRAR DA ITEMACTION <<<");
 		output.setValue("listaTipoUnd", UnidadeDeMedida.values());
-		String nome = input.getString("item.nome");
+		String nome = input.getString("itemNome");
 		
 		if(isEmpty(nome)) {
 			output.setValue("erro", "O nome do produto é obrigatório ser preenchido");
 			return ERROR;
 		}
 		
-		String precoUnitarioStr = input.getString("item.preco");
+		String precoUnitarioStr = input.getString("itemPreco");
 		
 		
 		if(precoUnitarioStr.isEmpty()) {
@@ -48,10 +49,10 @@ public class ItemAction extends BaseAction {
 			return ERROR;
 		}
 		
-		String tipoUnidade = input.getString("tipo_unidade");
+		String tipoUnidade = input.getString("tipoUnidade");
 		UnidadeDeMedida tipo = null;
 		
-		tipoUnidade = input.getString("tipo_unidade");
+		tipoUnidade = input.getString("tipoUnidade");
 		System.out.println(">>> VALOR EXATO RECEBIDO NO BACKEND: [" + tipoUnidade + "] <<<");
 		if (!isEmpty(tipoUnidade)) {
             try {
@@ -65,7 +66,7 @@ public class ItemAction extends BaseAction {
             return ERROR;
         }
 		
-		int quantidade = input.getInt("item.quantidade");
+		int quantidade = input.getInt("itemQuantidade");
 		
 		
 		if(quantidade <= 0) {
@@ -74,6 +75,8 @@ public class ItemAction extends BaseAction {
 		}
 		
 		ItemEntity item = new ItemEntity();
+		
+		System.out.println("ID gerado: " + item.getId());
 		item.setNomeItem(nome);
 		item.setPrecoItem(precoUnitario);
 		item.setTipoUnidadeDeMedida(tipo);
