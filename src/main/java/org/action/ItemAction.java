@@ -1,14 +1,15 @@
 package org.action;
 
 import java.math.BigDecimal;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import org.enums.UnidadeDeMedida;
 import org.mentawai.core.BaseAction;
 import org.model.entities.ItemEntity;
 
 public class ItemAction extends BaseAction {
-	
+	private static final List<ItemEntity> lista = new ArrayList<>(); 
 	public String listarTipoDeUnidades() {
 		output.setValue("listaTipoUnd", UnidadeDeMedida.values());
 		return SUCCESS;
@@ -27,12 +28,12 @@ public class ItemAction extends BaseAction {
 		String precoUnitarioStr = input.getString("itemPreco");
 		
 		
-		if(precoUnitarioStr.isEmpty()) {
+		if(isEmpty(precoUnitarioStr)) {
 			output.setValue("erro", "O preço unitário do produto é obrigatório ser preenchido");
 			return ERROR;
 		}
 		
-		precoUnitarioStr = precoUnitarioStr.replace("R$", "").replace(".", "").replace(",", ".").trim();
+		precoUnitarioStr = precoUnitarioStr.replace("R$", "").replace(",", ".").trim();
 		
 		
 		BigDecimal precoUnitario;
@@ -44,7 +45,7 @@ public class ItemAction extends BaseAction {
             return ERROR;
         }
 		
-		if(precoUnitario.compareTo(BigDecimal.ZERO) <= 0 || precoUnitario == null) {
+		if(precoUnitario == null || precoUnitario.compareTo(BigDecimal.ZERO) <= 0) {
 			output.setValue("erro", "O preço unitário do produto deve ser maior ou igual a zero");
 			return ERROR;
 		}
@@ -66,25 +67,67 @@ public class ItemAction extends BaseAction {
             return ERROR;
         }
 		
-		int quantidade = input.getInt("itemQuantidade");
+		String quantidadeStr = input.getString("itemQuantidade");
 		
-		
-		if(quantidade <= 0) {
-			output.setValue("erro", "A quantidade do produto deve ser maior ou igual a zero");
-			return ERROR;
+		if (quantidadeStr == null || quantidadeStr.trim().isEmpty()) {
+		    output.setValue("erro", "A quantidade é obrigatória.");
+		    return ERROR;
 		}
 		
-		ItemEntity item = new ItemEntity();
+		
+		int quantidade;
+		try {
+		    quantidade = Integer.parseInt(quantidadeStr);
+		    if (quantidade <= 0) {
+		        output.setValue("erro", "A quantidade deve ser maior que zero.");
+		        return ERROR;
+		    }
+		} catch (NumberFormatException e) {
+		    output.setValue("erro", "A quantidade informada é inválida.");
+		    return ERROR;
+		}
+		
+		ItemEntity item = new ItemEntity(nome,precoUnitario,tipo,quantidade);
 		
 		System.out.println("ID gerado: " + item.getId());
-		item.setNomeItem(nome);
-		item.setPrecoItem(precoUnitario);
-		item.setTipoUnidadeDeMedida(tipo);
-		item.addQuantidade(quantidade);
+		lista.add(item);
 		System.out.println(">>> SUCESSO: Chegou ao final do método -> retornando SUCCESS");
 		output.setValue("item", item);
+		output.setValue("lista", lista);
         output.setValue("mensagem", "Item cadastrado com sucesso!");
 		
 		return SUCCESS;
+	}
+	
+	public String exibir() throws Exception {
+	    int paginaAtual = input.getInt("page", 1);
+	    if (paginaAtual < 1) {
+	        paginaAtual = 1;
+	    }
+
+	    int registrosPorPagina = 5;
+	    int totalRegistros = lista.size();
+
+	    int totalPaginas = (int) Math.ceil((double) totalRegistros / registrosPorPagina);
+	    if (totalPaginas == 0) {
+	        totalPaginas = 1;
+	    }
+	    if (paginaAtual > totalPaginas) {
+	        paginaAtual = totalPaginas;
+	    }
+
+	    int inicio = (paginaAtual - 1) * registrosPorPagina;
+	    int fim = Math.min(inicio + registrosPorPagina, totalRegistros);
+
+	    List<ItemEntity> itensPaginados = (inicio < totalRegistros) 
+	            ? lista.subList(inicio, fim) 
+	            : new ArrayList<>();
+
+	    output.setValue("lista", itensPaginados);
+	    output.setValue("paginaAtual", paginaAtual);
+	    output.setValue("totalPaginas", totalPaginas);
+	    output.setValue("totalRegistros", totalRegistros);
+
+	    return SUCCESS;
 	}
 }
