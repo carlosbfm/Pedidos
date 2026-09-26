@@ -119,7 +119,6 @@ button{
 	</table>
 
 	<div class="paginacao">
-		<!-- Botão Anterior -->
 		<c:choose>
 			<c:when test="${paginaAtual > 1}">
 				<a href="itens.exibir.mtw?page=${paginaAtual - 1}">&laquo;
@@ -130,7 +129,6 @@ button{
 			</c:otherwise>
 		</c:choose>
 
-		<!-- Numeração das Páginas -->
 		<c:forEach begin="1" end="${totalPaginas}" var="p">
 			<c:choose>
 				<c:when test="${p == paginaAtual}">
@@ -142,7 +140,6 @@ button{
 			</c:choose>
 		</c:forEach>
 
-		<!-- Botão Próxima -->
 		<c:choose>
 			<c:when test="${paginaAtual < totalPaginas}">
 				<a href="itens.exibir.mtw?page=${paginaAtual + 1}">Próxima

@@ -101,11 +101,27 @@ h2 {
 	box-sizing: border-box;
 }
 
+button{
+	display: flex
+	flex-direction: right;
+	margin-top: 14px;
+	padding: 10px 16px;
+	font-size: 14px;
+	font-weight: bold;
+	color: #ffffff;
+	background-color: #0275d8;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
 </style>
 </head>
 <body>
 	<h2>Novo Item</h2>
 	<div class="forms">
+	<button onclick="location.href='itens.exibir.mtw'">Voltar</button>
 	<mtw:form action="cadastro-item.cadastrar.mtw" method="POST"  >
 
 		<label>Nome do Item:</label>
