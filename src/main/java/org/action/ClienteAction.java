@@ -1,6 +1,7 @@
 package org.action;
 
 import java.time.LocalDate;
+
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ public class ClienteAction extends BaseAction{
 		LocalDate dataFmt = null;
 		try {
 			if (data == null || data.trim().isEmpty()) {
-		        output.setValue("erro", "O preenchimento da data de nascimento é obrigatório");
-		        return ERROR;
-		    }
+				output.setValue("erro", "O preenchimento da data de nascimento é obrigatório");
+				return ERROR;
+			}
 			dataFmt = LocalDate.parse(data);
 		} catch (DateTimeParseException e1) {
 			try {
@@ -52,14 +53,41 @@ public class ClienteAction extends BaseAction{
 
 		return SUCCESS;
 	}
-	
+
 	@Override
-    public String execute() throws Exception {
-        return cadastro();
-    }
-	
-	public String index() throws Exception {
-	    output.setValue("lista", lista);
-	    return SUCCESS;
+	public String execute() throws Exception {
+		return cadastro();
+	}
+
+	public String exibir() throws Exception {
+		int paginaAtual = input.getInt("page", 1);
+		if (paginaAtual < 1) {
+			paginaAtual = 1;
+		}
+
+		int registrosPorPagina = 5;
+		int totalRegistros = lista.size();
+
+		int totalPaginas = (int) Math.ceil((double) totalRegistros / registrosPorPagina);
+		if (totalPaginas == 0) {
+			totalPaginas = 1;
+		}
+		if (paginaAtual > totalPaginas) {
+			paginaAtual = totalPaginas;
+		}
+
+		int inicio = (paginaAtual - 1) * registrosPorPagina;
+		int fim = Math.min(inicio + registrosPorPagina, totalRegistros);
+
+		List<ClienteEntity> itensPaginados = (inicio < totalRegistros) 
+				? lista.subList(inicio, fim) 
+						: new ArrayList<>();
+
+				output.setValue("lista", itensPaginados);
+				output.setValue("paginaAtual", paginaAtual);
+				output.setValue("totalPaginas", totalPaginas);
+				output.setValue("totalRegistros", totalRegistros);
+
+				return SUCCESS;
 	}
 }
