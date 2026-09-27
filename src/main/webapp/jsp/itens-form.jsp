@@ -121,8 +121,13 @@ button{
 <body>
 	<h2>Novo Item</h2>
 	<div class="forms">
-	<button onclick="location.href='itens.exibir.mtw'">Voltar</button>
-	<mtw:form action="cadastro-item.cadastrar.mtw" method="POST"  >
+	
+	<form action="itens.exibir.mtw" method="GET"
+		style="display: inline;">
+		<button type="submit">Voltar</button>
+	</form>
+	
+	<mtw:form action="itens.cadastro.mtw" method="POST" >
 
 		<label>Nome do Item:</label>
 		<mtw:input type="text" name="itemNome" size="30" maxlength="30" />
@@ -143,6 +148,7 @@ button{
 				<c:out value="${erro}" />
 			</div>
 		</c:if>
+		
 	</mtw:form>
 	
 	</div>	

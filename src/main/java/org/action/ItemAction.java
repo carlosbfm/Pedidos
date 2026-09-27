@@ -17,7 +17,7 @@ public class ItemAction extends BaseAction {
 	
 
 	
-	public String cadastrar() {
+	public String cadastro() {
 		System.out.println(">>> ENTROU NO CADASTRAR DA ITEMACTION <<<");
 		output.setValue("listaTipoUnd", UnidadeDeMedida.values());
 		String nome = input.getString("itemNome");

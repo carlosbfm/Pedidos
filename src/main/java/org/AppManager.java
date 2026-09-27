@@ -20,19 +20,11 @@ public class AppManager extends ApplicationManager {
 		.filter(new PaginationFilter("lista", 5))
 		.on(SUCCESS,fwd("jsp/clientes.jsp"));
 
-		action("/novo-item", ItemAction.class, "listarTipoDeUnidades")
-		.on(SUCCESS, fwd("/jsp/index.jsp"));
-		
+		action("/itens", ItemAction.class, "cadastro")
+		.on(SUCCESS, fwd("jsp/itens-form.jsp"))
+		.on(ERROR, fwd("jsp/itens-form.jsp"));
 
-		action("/cadastro-item", ItemAction.class, "cadastrar")
-		.on(SUCCESS, fwd("jsp/hello.jsp"))
-		.on(ERROR, fwd("jsp/index.jsp"));
-		
-		action("novo-cliente", ClienteAction.class, "cadastro")
-        .on(SUCCESS, fwd("/jsp/clientes-form.jsp"))
-        .on(ERROR, fwd("/jsp/clientes-form.jsp"));
-
-		action("/novo-cliente", ClienteAction.class, "cadastro")
+		action("/clientes", ClienteAction.class, "cadastro")
 		.on(SUCCESS, fwd("jsp/clientes-form.jsp"))
 		.on(ERROR, fwd("jsp/clientes-form.jsp"));
 

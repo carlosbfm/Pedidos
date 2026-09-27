@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="mtw" uri="http://www.mentaframework.org/tags-mtw/"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="mtw" uri="http://www.mentaframework.org/tags-mtw/"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Pedidos</title>
+
 <style>
 table {
 	width: 100%;
@@ -77,38 +77,14 @@ button {
 	cursor: pointer;
 	transition: background-color 0.2s ease;
 }
-
-.btn-icone-excluir {
-    background: transparent;
-    border: 1px solid transparent;
-    color: #d9534f; /* Cor padrão da lixeira (vermelho) */
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease-in-out;
-}
-
-.btn-icone-excluir:hover {
-    background-color: #fdf2f2;
-    border-color: #d9534f;
-    color: #c9302c; /* Escurece o vermelho no foco */
-}
-
-.btn-icone-excluir:active {
-    background-color: #f8d7da;
-    transform: scale(0.95); /* Leve feedback tátil de clique */
-}
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<title>Pedidos</title>
 </head>
 <body>
 
-	<form action="itens.cadastro.mtw" method="GET"
-		style="display: inline;">
-		<button type="submit">NOVO ITEM+</button>
+	<form action="clientes.cadastro.mtw" method="GET" style="display: inline;">
+		<button type="submit">NOVO CLIENTE + </button>
 	</form>
 
 	<table>
@@ -116,37 +92,19 @@ button {
 			<tr>
 				<th>ID</th>
 				<th>Nome</th>
-				<th>Preço</th>
-				<th>Qtd</th>
-				<th>Und</th>
-				<th>Data</th>
-				<th></th>
+				<th>Data de Nascimento</th>
 			</tr>
 		</thead>
 		<tbody>
 
-			<c:forEach items="${lista}" var="item">
+			<c:forEach items="${lista}" var="cliente">
 				<tr>
-					<td>${item.id}</td>
-					<td>${item.nomeItem}</td>
-					<td>${item.precoItem}</td>
-					<td>${item.quantidadeDoItem}</td>
-					<td>${item.tipoUnidadeDeMedida}</td>
-					<td>${item.dataCadastroFormatada}</td>
-					<td>
-						<form action="itens.excluir.mtw" method="POST"
-							style="margin: 0; display: inline;"
-							onsubmit="return confirm('Deseja realmente excluir o item: ${item.nomeItem}?');">
-
-							<input type="hidden" name="idExcluir" value="${item.id}" />
-
-							<input type="hidden" name="page" value="${paginaAtual}" />
-
-							<button type="submit" class="btn-icone-excluir"><i class="bi bi-trash"></i></button>
-						</form>
-					</td>
+					<td>${cliente.id}</td>
+					<td>${cliente.nomeCliente}</td>
+					<td>${cliente.dataNascimentoFormatada}</td>
 				</tr>
 			</c:forEach>
+
 			<c:if test="${empty lista}">
 				<tr>
 					<td colspan="6" style="text-align: center;">Nenhum item
