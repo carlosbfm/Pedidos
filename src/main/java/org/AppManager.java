@@ -22,11 +22,19 @@ public class AppManager extends ApplicationManager {
 
 		action("/itens", ItemAction.class, "cadastro")
 		.on(SUCCESS, fwd("jsp/itens-form.jsp"))
-		.on(ERROR, fwd("jsp/itens-form.jsp"));
+		.addConsequence(ERROR, fwd("jsp/itens-form.jsp"));
+		
+		action("/itens", ItemAction.class, "excluir")
+	    .on(SUCCESS, redir("itens.exibir.mtw"))
+	    .addConsequence(ERROR, fwd("jsp/itens.jsp"));
+		
+		action("/clientes", ClienteAction.class, "excluir")
+	    .on(SUCCESS, redir("clientes.exibir.mtw"))
+	    .addConsequence(ERROR, fwd("jsp/clientes.jsp"));
 
 		action("/clientes", ClienteAction.class, "cadastro")
 		.on(SUCCESS, fwd("jsp/clientes-form.jsp"))
-		.on(ERROR, fwd("jsp/clientes-form.jsp"));
+		.addConsequence(ERROR, fwd("jsp/clientes-form.jsp"));
 
 		
 	}

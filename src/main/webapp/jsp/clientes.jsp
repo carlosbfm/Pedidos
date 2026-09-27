@@ -77,7 +77,33 @@ button {
 	cursor: pointer;
 	transition: background-color 0.2s ease;
 }
+
+.btn-icone-excluir {
+	background: transparent;
+	border: 1px solid transparent;
+	color: #d9534f; 
+	cursor: pointer;
+	padding: 6px;
+	border-radius: 4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease-in-out;
+}
+
+.btn-icone-excluir:hover {
+	background-color: #fdf2f2;
+	border-color: #d9534f;
+	color: #c9302c;
+}
+
+.btn-icone-excluir:active {
+	background-color: #f8d7da;
+	transform: scale(0.95); 
+}
 </style>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <title>Pedidos</title>
 </head>
@@ -93,6 +119,7 @@ button {
 				<th>ID</th>
 				<th>Nome</th>
 				<th>Data de Nascimento</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -102,12 +129,18 @@ button {
 					<td>${cliente.id}</td>
 					<td>${cliente.nomeCliente}</td>
 					<td>${cliente.dataNascimentoFormatada}</td>
+					<td>
+						<a href="clientes.excluir.mtw?id=${cliente.id}&page=${page}"
+						onclick="return confirm('Atenção: Esta ação não pode ser desfeita. Deseja mesmo excluir este registro?');"
+						style="color: red; font-weight: bold;" class= "btn-icone-excluir" title="Excluir item"> <i class="bi bi-trash"></i>
+					</a>
+					</td>
 				</tr>
 			</c:forEach>
 
 			<c:if test="${empty lista}">
 				<tr>
-					<td colspan="6" style="text-align: center;">Nenhum item
+					<td colspan="4" style="text-align: center;">Nenhum item
 						cadastrado até o momento.</td>
 				</tr>
 			</c:if>
@@ -117,7 +150,7 @@ button {
 	<div class="paginacao">
 		<c:choose>
 			<c:when test="${paginaAtual > 1}">
-				<a href="itens.exibir.mtw?page=${paginaAtual - 1}">&laquo;
+				<a href="clientes.exibir.mtw?page=${paginaAtual - 1}">&laquo;
 					Anterior</a>
 			</c:when>
 			<c:otherwise>
@@ -131,14 +164,14 @@ button {
 					<span class="atual">${p}</span>
 				</c:when>
 				<c:otherwise>
-					<a href="itens.exibir.mtw?page=${p}">${p}</a>
+					<a href="clientes.exibir.mtw?page=${p}">${p}</a>
 				</c:otherwise>
 			</c:choose>
 		</c:forEach>
 
 		<c:choose>
 			<c:when test="${paginaAtual < totalPaginas}">
-				<a href="itens.exibir.mtw?page=${paginaAtual + 1}">Próxima
+				<a href="clientes.exibir.mtw?page=${paginaAtual + 1}">Próxima
 					&raquo;</a>
 			</c:when>
 			<c:otherwise>

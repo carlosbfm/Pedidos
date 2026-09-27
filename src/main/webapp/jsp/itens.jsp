@@ -79,35 +79,35 @@ button {
 }
 
 .btn-icone-excluir {
-    background: transparent;
-    border: 1px solid transparent;
-    color: #d9534f; /* Cor padrão da lixeira (vermelho) */
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease-in-out;
+	background: transparent;
+	border: 1px solid transparent;
+	color: #d9534f; 
+	cursor: pointer;
+	padding: 6px;
+	border-radius: 4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease-in-out;
 }
 
 .btn-icone-excluir:hover {
-    background-color: #fdf2f2;
-    border-color: #d9534f;
-    color: #c9302c; /* Escurece o vermelho no foco */
+	background-color: #fdf2f2;
+	border-color: #d9534f;
+	color: #c9302c;
 }
 
 .btn-icone-excluir:active {
-    background-color: #f8d7da;
-    transform: scale(0.95); /* Leve feedback tátil de clique */
+	background-color: #f8d7da;
+	transform: scale(0.95); 
 }
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
 
-	<form action="itens.cadastro.mtw" method="GET"
-		style="display: inline;">
+	<form action="itens.cadastro.mtw" method="GET" style="display: inline;">
 		<button type="submit">NOVO ITEM+</button>
 	</form>
 
@@ -134,22 +134,18 @@ button {
 					<td>${item.tipoUnidadeDeMedida}</td>
 					<td>${item.dataCadastroFormatada}</td>
 					<td>
-						<form action="itens.excluir.mtw" method="POST"
-							style="margin: 0; display: inline;"
-							onsubmit="return confirm('Deseja realmente excluir o item: ${item.nomeItem}?');">
-
-							<input type="hidden" name="idExcluir" value="${item.id}" />
-
-							<input type="hidden" name="page" value="${paginaAtual}" />
-
-							<button type="submit" class="btn-icone-excluir"><i class="bi bi-trash"></i></button>
-						</form>
+						<a href="itens.excluir.mtw?id=${item.id}&page=${page}"
+						onclick="return confirm('Atenção: Esta ação não pode ser desfeita. Deseja mesmo excluir este registro?');"
+						style="color: red; font-weight: bold;" class= "btn-icone-excluir" title="Excluir item"> <i class="bi bi-trash"></i>
+					</a>
 					</td>
+
+
 				</tr>
 			</c:forEach>
 			<c:if test="${empty lista}">
 				<tr>
-					<td colspan="6" style="text-align: center;">Nenhum item
+					<td colspan="7" style="text-align: center;">Nenhum item
 						cadastrado até o momento.</td>
 				</tr>
 			</c:if>

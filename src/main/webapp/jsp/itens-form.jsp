@@ -143,11 +143,11 @@ button{
 		<input type="submit" value="Enviar" />
 
 
-		<c:if test="${not empty erro}">
+		<mtw:hasError>
 			<div class="alert-error">
-				<c:out value="${erro}" />
+				<mtw:error field="erro"/>
 			</div>
-		</c:if>
+		</mtw:hasError>
 		
 	</mtw:form>
 	

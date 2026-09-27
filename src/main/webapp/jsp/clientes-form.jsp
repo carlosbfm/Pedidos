@@ -148,17 +148,18 @@ button {
 			<input type="submit" value="Cadastrar" />
 
 		</mtw:form>
-		<c:if test="${not empty erro}">
+		
+		<mtw:hasError>
 			<div class="alert-error">
-				<c:out value="${erro}" />
+				<mtw:error field="erro"/>
 			</div>
-		</c:if>
+		</mtw:hasError>
 
-		<c:if test="${not empty mensagem}">
+		<mtw:if test="exibirMensagem" value="true">
 			<div class="alert-success">
-				<c:out value="${mensagem}" />
+				<mtw:out value="mensagem" />
 			</div>
-		</c:if>
+		</mtw:if>
 	</div>
 
 </body>

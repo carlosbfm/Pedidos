@@ -17,7 +17,7 @@ public class ClienteAction extends BaseAction{
 		String nomeCliente = input.getString("nomeCliente");
 
 		if (isEmpty(nomeCliente)) {
-			output.setValue("erro", "O preenchimento do nome do cliente é obrigatório");
+			addError("erro", "O preenchimento do nome do cliente é obrigatório");
 			return ERROR;
 		}
 
@@ -26,7 +26,7 @@ public class ClienteAction extends BaseAction{
 		LocalDate dataFmt = null;
 		try {
 			if (data == null || data.trim().isEmpty()) {
-				output.setValue("erro", "O preenchimento da data de nascimento é obrigatório");
+				addError("erro", "O preenchimento da data de nascimento é obrigatório");
 				return ERROR;
 			}
 			dataFmt = LocalDate.parse(data);
@@ -34,7 +34,7 @@ public class ClienteAction extends BaseAction{
 			try {
 				dataFmt = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 			} catch (DateTimeParseException e2) {
-				output.setValue("erro", "Formato de data inválido. Use aaaa-mm-dd ou dd/mm/aaaa");
+				addError("erro", "Formato de data inválido. Use aaaa-mm-dd ou dd/mm/aaaa");
 				return ERROR;
 			}
 		}
@@ -49,6 +49,7 @@ public class ClienteAction extends BaseAction{
 
 		output.setValue("cliente", cliente);
 		output.setValue("lista", lista);
+		output.setValue("exibirMensagem", true);
 		output.setValue("mensagem", "Novo cliente cadastrado!");
 
 		return SUCCESS;
@@ -89,5 +90,32 @@ public class ClienteAction extends BaseAction{
 				output.setValue("totalRegistros", totalRegistros);
 
 				return SUCCESS;
+	}
+	
+	public String excluir() {
+		String idStr = input.getString("id");
+
+		if (idStr == null || isEmpty(idStr)) {
+			addError("erro", "Identificador do cliente não foi fornecido.");
+			return ERROR;
+		}
+
+		try {
+			Long id = Long.parseLong(idStr);
+
+			boolean removido = lista.removeIf(item -> item.getId().equals(id));
+
+			if (!removido) {
+				addError("erro", "Cliente não encontrado para exclusão.");
+				return ERROR;
+			}
+
+		} catch (NumberFormatException e) {
+			addError("erro", "Formato de identificador inválido.");
+			return ERROR;
+		}
+		System.out.println("Exclusão ok do cliente com id: " + idStr);
+
+		return SUCCESS;
 	}
 }
