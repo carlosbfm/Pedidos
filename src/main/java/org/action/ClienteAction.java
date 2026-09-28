@@ -1,5 +1,6 @@
 package org.action;
 
+
 import java.time.LocalDate;
 
 import java.time.format.DateTimeFormatter;
@@ -118,4 +119,86 @@ public class ClienteAction extends BaseAction{
 
 		return SUCCESS;
 	}
+	
+	
+	public String exibirCliente() {
+	    String idStr = input.getString("id");
+	    
+	    System.out.println("item id = " + idStr);
+	    if (idStr == null || idStr.trim().isEmpty()) {
+	        addError("erro", "ID não informado para edição.");
+	        return ERROR;
+	    }
+	    
+	    ClienteEntity cliente = null;
+	    try {
+	        Long id = Long.parseLong(idStr);
+	        
+	        System.out.println("item id = " + id);
+	         cliente = lista.stream()
+	                                   .filter(x -> x.getId().equals(id))
+	                                   .findFirst()
+	                                   .orElse(null);
+	                                   
+	        if (cliente == null) {
+	            addError("erro", "Item não encontrado no sistema.");
+	            return ERROR;
+	        }
+	        
+	        output.setValue("id", cliente.getId());
+	        output.setValue("nomeCliente", cliente.getNomeCliente());
+	        output.setValue("dataNascimento", cliente.getDataNascimentoFormatada());
+	        
+	        output.setValue("cliente", cliente);
+	        
+	    } catch (NumberFormatException e) {
+	        addError("erro", "Formato de ID inválido.");
+	        return ERROR;
+	    }
+	    
+	    
+	    
+	    return SUCCESS;
+	}
+	
+	public String atualizarCliente() {
+
+        Long id = input.getLong("id");
+        String nomeCliente = input.getString("nomeCliente");
+        String dataNascimento = input.getString("dataNascimento");
+        
+
+        if (id == null || isEmpty(nomeCliente) || dataNascimento == null || dataNascimento.trim().isEmpty() ) {
+            addError("erro", "Todos os campos devem ser preenchidos corretamente.");
+            return ERROR;
+        }
+
+        
+        LocalDate dataFmt = null;
+        try {
+        	dataFmt = LocalDate.parse(dataNascimento);
+        } catch (DateTimeParseException e1) {
+			try {
+				dataFmt = LocalDate.parse(dataNascimento, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			} catch (DateTimeParseException e2) {
+				addError("erro", "Formato de data inválido. Use aaaa-mm-dd ou dd/mm/aaaa");
+				return ERROR;
+			}
+		}
+
+        ClienteEntity cliente = lista.stream()
+                .filter(i -> i.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+
+        if (cliente == null) {
+            addError("erro", "Item não localizado para atualização.");
+            return ERROR;
+        }
+
+        cliente.setNomeCliente(nomeCliente);
+        cliente.setDataNascimento(dataFmt);
+
+        return SUCCESS;
+    }
 }

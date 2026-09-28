@@ -97,5 +97,11 @@ public class ItemEntity {
 	public LocalDateTime getDataHoraEmissao() {
 		return dataHoraEmissao;
 	}
+	
+	public void atualizarEstoque(int novaQuantidade) {
+	    int diferenca = novaQuantidade - this.quantidadeDoItem;
+	    if (diferenca > 0) this.addQuantidade(diferenca);
+	    else if (diferenca < 0) this.removeQuantidade(Math.abs(diferenca));
+	}
 
 }

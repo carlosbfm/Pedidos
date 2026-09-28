@@ -114,6 +114,7 @@ button {
 	<table>
 		<thead>
 			<tr>
+				<th></th>
 				<th>ID</th>
 				<th>Nome</th>
 				<th>Preço</th>
@@ -127,6 +128,10 @@ button {
 
 			<c:forEach items="${lista}" var="item">
 				<tr>
+					<td><a href="itens.exibirItem.mtw?id=${item.id}" 
+					font-weight: bold;" class= "btn-icone-editar" title="Editar item">
+					<i class="bi bi-pencil-square"></i>
+					</a></td>
 					<td>${item.id}</td>
 					<td>${item.nomeItem}</td>
 					<td>${item.precoItem}</td>
@@ -145,7 +150,7 @@ button {
 			</c:forEach>
 			<c:if test="${empty lista}">
 				<tr>
-					<td colspan="7" style="text-align: center;">Nenhum item
+					<td colspan="8" style="text-align: center;">Nenhum item
 						cadastrado até o momento.</td>
 				</tr>
 			</c:if>

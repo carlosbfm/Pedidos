@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="mtw" uri="http://www.mentaframework.org/tags-mtw/"%>
+
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -81,7 +83,7 @@ button {
 .btn-icone-excluir {
 	background: transparent;
 	border: 1px solid transparent;
-	color: #d9534f; 
+	color: #d9534f;
 	cursor: pointer;
 	padding: 6px;
 	border-radius: 4px;
@@ -99,7 +101,7 @@ button {
 
 .btn-icone-excluir:active {
 	background-color: #f8d7da;
-	transform: scale(0.95); 
+	transform: scale(0.95);
 }
 </style>
 <link rel="stylesheet"
@@ -109,13 +111,15 @@ button {
 </head>
 <body>
 
-	<form action="clientes.cadastro.mtw" method="GET" style="display: inline;">
-		<button type="submit">NOVO CLIENTE + </button>
+	<form action="clientes.cadastro.mtw" method="GET"
+		style="display: inline;">
+		<button type="submit">NOVO CLIENTE +</button>
 	</form>
 
 	<table>
 		<thead>
 			<tr>
+				<th></th>
 				<th>ID</th>
 				<th>Nome</th>
 				<th>Data de Nascimento</th>
@@ -126,21 +130,25 @@ button {
 
 			<c:forEach items="${lista}" var="cliente">
 				<tr>
+					<td><a href="clientes.exibirCliente.mtw?id=${cliente.id}" font-weight:
+						bold;" class="btn-icone-editar" title="Editar Cliente"> <i
+							class="bi bi-pencil-square"></i>
+					</a></td>
 					<td>${cliente.id}</td>
 					<td>${cliente.nomeCliente}</td>
 					<td>${cliente.dataNascimentoFormatada}</td>
-					<td>
-						<a href="clientes.excluir.mtw?id=${cliente.id}&page=${page}"
+					<td><a
+						href="clientes.excluir.mtw?id=${cliente.id}&page=${page}"
 						onclick="return confirm('Atenção: Esta ação não pode ser desfeita. Deseja mesmo excluir este registro?');"
-						style="color: red; font-weight: bold;" class= "btn-icone-excluir" title="Excluir item"> <i class="bi bi-trash"></i>
-					</a>
-					</td>
+						style="color: red; font-weight: bold;" class="btn-icone-excluir"
+						title="Excluir item"> <i class="bi bi-trash"></i>
+					</a></td>
 				</tr>
 			</c:forEach>
 
 			<c:if test="${empty lista}">
 				<tr>
-					<td colspan="4" style="text-align: center;">Nenhum item
+					<td colspan="5" style="text-align: center;">Nenhum item
 						cadastrado até o momento.</td>
 				</tr>
 			</c:if>

@@ -1,12 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib prefix="mtw" uri="http://www.mentaframework.org/tags-mtw/"%>
+<%@page contentType="text/html; charset=UTF-8"%>
+<%@taglib prefix="mtw" uri="http://www.mentaframework.org/tags-mtw/"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Pedidos</title>
+<title>Editar Item</title>
+<!-- Bootstrap Icons para os símbolos de + e - -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 <style>
 body {
 	margin: 0;
@@ -45,13 +48,14 @@ h2 {
 }
 
 .forms label {
+	display: block;
 	font-size: 13px;
 	font-weight: 600;
 	color: #444444;
-	margin-top: 4px;
+	margin-top: 14px;
+	margin-bottom: 6px;
 }
-
-.forms input[type="text"], .forms input[type="date"], .forms select {
+.forms input[type="text"] {
 	width: 100%;
 	padding: 8px 10px;
 	font-size: 14px;
@@ -62,8 +66,7 @@ h2 {
 	transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.forms input[type="text"]:focus, .forms input[type="number"]:focus,
-	.forms select:focus {
+.forms input[type="text"]:focus{
 	border-color: #0275d8;
 	box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.2);
 	outline: none;
@@ -93,25 +96,12 @@ h2 {
 	padding: 8px 12px;
 	margin-top: 10px;
 	border-radius: 4px;
-	width: fit-content;
-	max-width: 100%;
-	box-sizing: border-box;
-}
-
-.alert-success {
-	color: #fff;
-	background-color: #38e04b;
-	font-weight: bold;
-	padding: 8px 12px;
-	margin-top: 10px;
-	border-radius: 4px;
-	width: fit-content;
-	max-width: 100%;
+	width: 100%;
 	box-sizing: border-box;
 }
 
 button {
-	display: flex flex-direction: right;
+	display: flex flex-direction: left;
 	margin-top: 14px;
 	padding: 10px 16px;
 	font-size: 14px;
@@ -123,43 +113,39 @@ button {
 	cursor: pointer;
 	transition: background-color 0.2s ease;
 }
+
 </style>
 
 </head>
 <body>
-
+	<h2>Editar Item</h2>
 	<div class="forms">
 
-		<form action="clientes.exibir.mtw" method="GET"
-			style="display: inline;">
+		<form action="clientes.exibir.mtw" method="GET" style="display: inline;">
 			<button type="submit">Voltar</button>
 		</form>
 		
-		<mtw:form action="clientes.cadastro.mtw" method="POST">
-			<h2>Cadastro de Cliente</h2>
 
-			<label>Nome do cliente:</label>
-			<mtw:input type="text" name="nomeCliente" size="30" maxlength="255" />
+		<mtw:form action="clientes.atualizarCliente.mtw" method="POST">
 
-			<label>Data de Nascimento:</label>
-			<input type="date" name="dataNascimento" value="${dataNascimento}" />
+			<mtw:input type="hidden" name="id" />
 
-			<input type="submit" value="Cadastrar" />
+			<label>Nome do Cliente:</label>
+			<mtw:input type="text" name="nomeCliente" size="30" maxlength="30" />
+
+			<label>Data Nascimento:</label>
+			<mtw:input type="text" name="dataNascimento" />
+			<mtw:input type="hidden" name="dataCadastroCliente"/>
+
+
+			<input type="submit" value="Salvar Alterações" />
+
+			<c:if test="${not empty erro}">
+				<div class="alert-error">${erro}</div>
+			</c:if>
 
 		</mtw:form>
-		
-		<mtw:hasError>
-			<div class="alert-error">
-				<mtw:error field="erro"/>
-			</div>
-		</mtw:hasError>
 
-		<mtw:if test="exibirMensagem" value="true">
-			<div class="alert-success">
-				<mtw:out value="mensagem" />
-			</div>
-		</mtw:if>
 	</div>
-
 </body>
 </html>

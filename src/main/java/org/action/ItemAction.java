@@ -11,7 +11,7 @@ import org.model.entities.ItemEntity;
 
 public class ItemAction extends BaseAction {
 	private static final List<ItemEntity> lista = new ArrayList<>(); 
-	
+
 	public String cadastro() {
 		System.out.println(">>> ENTROU NO CADASTRAR DA ITEMACTION <<<");
 		output.setValue("listaTipoUnd", UnidadeDeMedida.values());
@@ -154,4 +154,107 @@ public class ItemAction extends BaseAction {
 
 		return SUCCESS;
 	}
+	
+	public String exibirItem() {
+		output.setValue("listaTipoUnd", UnidadeDeMedida.values());
+	    String idStr = input.getString("id");
+	    
+	    System.out.println("item id = " + idStr);
+	    if (idStr == null || idStr.trim().isEmpty()) {
+	        addError("erro", "ID não informado para edição.");
+	        return ERROR;
+	    }
+	    
+	    ItemEntity item = null;
+	    try {
+	        Long id = Long.parseLong(idStr);
+	        
+	        System.out.println("item id = " + id);
+	         item = lista.stream()
+	                                   .filter(x -> x.getId().equals(id))
+	                                   .findFirst()
+	                                   .orElse(null);
+	                                   
+	        if (item == null) {
+	            addError("erro", "Item não encontrado no sistema.");
+	            return ERROR;
+	        }
+	        
+	        output.setValue("id", item.getId());
+	        output.setValue("nomeItem", item.getNomeItem());
+	        output.setValue("precoItem", item.getPrecoItem());
+	        output.setValue("quantidadeDoItem", item.getQuantidadeDoItem());
+	        output.setValue("tipoUnidadeDeMedida", item.getTipoUnidadeDeMedida());
+	        
+	    } catch (NumberFormatException e) {
+	        addError("erro", "Formato de ID inválido.");
+	        return ERROR;
+	    }
+	    
+	    output.setValue("item", item);
+	    
+	    return SUCCESS;
+	}
+
+
+	public String atualizarItem() {
+        output.setValue("listaTipoUnd", UnidadeDeMedida.values());
+
+        Long id = input.getLong("id");
+        String nome = input.getString("nomeItem");
+        String precoUnitarioStr = input.getString("precoItem");
+        String tipoUnidade = input.getString("tipoUnidadeDeMedida");
+        int novaQuantidade = input.getInt("quantidadeDoItem", 0);
+
+        if (id == null || isEmpty(nome) || isEmpty(precoUnitarioStr) || novaQuantidade <= 0) {
+            addError("erro", "Todos os campos devem ser preenchidos corretamente.");
+            return ERROR;
+        }
+
+        BigDecimal novoPreco;
+        try {
+            String formatado = precoUnitarioStr.replace("R$", "").replace(",", ".").trim();
+            novoPreco = new BigDecimal(formatado);
+            if (novoPreco.compareTo(BigDecimal.ZERO) <= 0) {
+                addError("erro", "O preço deve ser superior a zero.");
+                return ERROR;
+            }
+        } catch (NumberFormatException e) {
+            addError("erro", "O preço unitário informado possui formato inválido.");
+            return ERROR;
+        }
+
+        UnidadeDeMedida unidade;
+        try {
+            unidade = UnidadeDeMedida.fromString(tipoUnidade.trim());
+        } catch (Exception e) {
+            addError("erro", "A unidade de medida selecionada é inválida.");
+            return ERROR;
+        }
+
+        ItemEntity item = lista.stream()
+                .filter(i -> i.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+
+        if (item == null) {
+            addError("erro", "Item não localizado para atualização.");
+            return ERROR;
+        }
+
+        item.setNomeItem(nome);
+        item.setPrecoItem(novoPreco);
+        item.setTipoUnidadeDeMedida(unidade);
+
+        int quantidadeAtual = item.getQuantidadeDoItem();
+        int diferenca = novaQuantidade - quantidadeAtual;
+
+        if (diferenca > 0) {
+            item.addQuantidade(diferenca);
+        } else if (diferenca < 0) {
+            item.removeQuantidade(Math.abs(diferenca)); 
+        }
+
+        return SUCCESS;
+    }
 }

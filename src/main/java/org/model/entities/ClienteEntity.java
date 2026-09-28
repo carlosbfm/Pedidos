@@ -31,15 +31,15 @@ public class ClienteEntity {
     }
 
 	public ClienteEntity() {
-
-	}
-
-	public ClienteEntity( String nome, LocalDate data){
-		
-		this.nomeCliente = nome;
-		this.dataNascimento = data;
 		this.id = GERADOR_ID.incrementAndGet();
 		this.dataCadastroCliente = LocalDateTime.now();
+	}
+
+	public ClienteEntity( String nomeCliente, LocalDate data){
+		this();
+		this.nomeCliente = nomeCliente;
+		this.dataNascimento = data;
+		
 	}
 
 	public LocalDateTime getDataCadastroCliente() {
