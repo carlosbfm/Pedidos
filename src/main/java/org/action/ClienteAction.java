@@ -13,6 +13,7 @@ import org.model.exceptions.NegocioException;
 import org.model.repositories.ClienteRepository;
 import org.model.repositories.impl.ClienteRepositoryImpl;
 import org.model.services.ClienteService;
+import org.model.utils.Page;
 
 public class ClienteAction extends BaseAction {
 
@@ -22,12 +23,20 @@ public class ClienteAction extends BaseAction {
   
 
     public String exibir() {
+        int paginaAtual = input.getInt("page", 1);
+        int limite = 5;
+
         try (Connection conn = AppManager.getConnection()) {
             ClienteRepository repo = new ClienteRepositoryImpl(conn);
             ClienteService service = new ClienteService(repo);
 
-            List<ClienteEntity> lista = service.listarTodos();
-            output.setValue("lista", lista);
+            Page<ClienteEntity> pagina = service.listarPaginado(paginaAtual, limite);
+
+            output.setValue("lista", pagina.getRegistros());
+            output.setValue("paginaAtual", pagina.getPaginaAtual());
+            output.setValue("totalPaginas", pagina.getTotalPaginas());
+            output.setValue("totalRegistros", pagina.getTotalRegistros());
+
             return SUCCESS;
         } catch (NegocioException e) {
             addError("erro", e.getMessage());

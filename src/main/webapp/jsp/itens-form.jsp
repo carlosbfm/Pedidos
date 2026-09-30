@@ -136,7 +136,7 @@ button{
 		<label for="quantidade">Quantidade:</label>
 		<input type="number" name="itemQuantidade" min="1" step="1"
 			value="<mtw:out value="itemQuantidade" />" />
-		<label>Tipo de unidade do item: </label>
+
 		<label for="tipoUnidade">Unidade de Medida:</label>
 		<mtw:select name="tipoUnidade" list="listaTipoUnd" />
 

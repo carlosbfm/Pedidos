@@ -21,11 +21,13 @@ public class AppManager extends ApplicationManager {
 
 		action("/itens", ItemAction.class, "exibir")
 		.filter(new PaginationFilter("lista", 5))
-		.on(SUCCESS, fwd("jsp/itens.jsp"));
+		.on(SUCCESS, fwd("jsp/itens.jsp"))
+		.addConsequence(ERROR, fwd("jsp/itens.jsp"));
 
 		action("/clientes", ClienteAction.class, "exibir")
 		.filter(new PaginationFilter("lista", 5))
-		.on(SUCCESS, fwd("jsp/clientes.jsp"));
+		.on(SUCCESS, fwd("jsp/clientes.jsp"))
+		.addConsequence(ERROR, fwd("jsp/clientes.jsp"));
 
 		action("/clientes", ClienteAction.class, "exibirCliente")
 		.on(SUCCESS, fwd("jsp/clientes-update.jsp")) 

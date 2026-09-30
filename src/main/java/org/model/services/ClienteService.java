@@ -2,9 +2,11 @@ package org.model.services;
 
 import java.time.LocalDate;
 import java.util.List;
+
 import org.model.entities.ClienteEntity;
 import org.model.exceptions.NegocioException;
 import org.model.repositories.ClienteRepository;
+import org.model.utils.Page;
 
 public class ClienteService {
 
@@ -16,6 +18,17 @@ public class ClienteService {
     
     public List<ClienteEntity> listarTodos() {
         return clienteRepository.listarTodos();
+    }
+    
+    public Page<ClienteEntity> listarPaginado(int pagina, int tamanhoPagina) {
+        if (pagina < 1) pagina = 1;
+        if (tamanhoPagina <= 0) tamanhoPagina = 5;
+
+        int totalRegistros = clienteRepository.contarTotal();
+        int offset = (pagina - 1) * tamanhoPagina;
+
+        List<ClienteEntity> clientes = clienteRepository.listarPaginado(tamanhoPagina, offset);
+        return new Page<>(clientes, pagina, tamanhoPagina, totalRegistros);
     }
 
     public ClienteEntity buscarPorId(Long id) {

@@ -21,6 +21,41 @@ public class ClienteRepositoryImpl implements ClienteRepository {
     public ClienteRepositoryImpl(Connection connection) {
         this.connection = connection;
     }
+    
+    @Override
+    public List<ClienteEntity> listarPaginado(int limit, int offset) {
+        String sql = "SELECT id, nome, data_nascimento, data_criacao "
+                   + "FROM cliente ORDER BY id DESC LIMIT ? OFFSET ?";
+        List<ClienteEntity> clientes = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, limit);
+            stmt.setInt(2, offset);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    clientes.add(mapearCliente(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar clientes paginados", e);
+        }
+        return clientes;
+    }
+
+    @Override
+    public int contarTotal() {
+        String sql = "SELECT COUNT(*) FROM cliente";
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao contar total de clientes", e);
+        }
+        return 0;
+    }
 
     @Override
     public ClienteEntity buscarPorId(Long id) {

@@ -120,6 +120,7 @@ button {
 				<th>Preço</th>
 				<th>Qtd</th>
 				<th>Und</th>
+				<th>Valor Total</th>
 				<th>Data</th>
 				<th></th>
 			</tr>
@@ -137,6 +138,7 @@ button {
 					<td>${item.precoItem}</td>
 					<td>${item.quantidadeDoItem}</td>
 					<td>${item.tipoUnidadeDeMedida}</td>
+					<td>${item.valorTotalEstoque}</td>
 					<td>${item.dataCadastroFormatada}</td>
 					<td>
 						<a href="itens.excluir.mtw?id=${item.id}&page=${page}"
@@ -150,7 +152,7 @@ button {
 			</c:forEach>
 			<c:if test="${empty lista}">
 				<tr>
-					<td colspan="8" style="text-align: center;">Nenhum item
+					<td colspan="9" style="text-align: center;">Nenhum item
 						cadastrado até o momento.</td>
 				</tr>
 			</c:if>
