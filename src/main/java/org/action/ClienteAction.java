@@ -1,204 +1,205 @@
 package org.action;
 
-
+import java.sql.Connection;
 import java.time.LocalDate;
-
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 
+import org.AppManager;
 import org.mentawai.core.BaseAction;
 import org.model.entities.ClienteEntity;
+import org.model.exceptions.NegocioException;
+import org.model.repositories.ClienteRepository;
+import org.model.repositories.impl.ClienteRepositoryImpl;
+import org.model.services.ClienteService;
 
-public class ClienteAction extends BaseAction{
-	private static final List<ClienteEntity> lista = new ArrayList<>();
+public class ClienteAction extends BaseAction {
 
-	public String cadastro() throws Exception {
-		String nomeCliente = input.getString("nomeCliente");
+    private static final DateTimeFormatter FMT_DATA_ISO = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter FMT_DATA_BR = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-		if (isEmpty(nomeCliente)) {
-			addError("erro", "O preenchimento do nome do cliente é obrigatório");
-			return ERROR;
-		}
+  
 
-		String data = input.getString("dataNascimento");
+    public String exibir() {
+        try (Connection conn = AppManager.getConnection()) {
+            ClienteRepository repo = new ClienteRepositoryImpl(conn);
+            ClienteService service = new ClienteService(repo);
 
-		LocalDate dataFmt = null;
-		try {
-			if (data == null || data.trim().isEmpty()) {
-				addError("erro", "O preenchimento da data de nascimento é obrigatório");
-				return ERROR;
-			}
-			dataFmt = LocalDate.parse(data);
-		} catch (DateTimeParseException e1) {
-			try {
-				dataFmt = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-			} catch (DateTimeParseException e2) {
-				addError("erro", "Formato de data inválido. Use aaaa-mm-dd ou dd/mm/aaaa");
-				return ERROR;
-			}
-		}
+            List<ClienteEntity> lista = service.listarTodos();
+            output.setValue("lista", lista);
+            return SUCCESS;
+        } catch (NegocioException e) {
+            addError("erro", e.getMessage());
+            return ERROR;
+        } catch (Exception e) {
+            addError("erro", "Erro ao carregar clientes: " + e.getMessage());
+            return ERROR;
+        }
+    }
 
-		ClienteEntity cliente = new ClienteEntity(nomeCliente, dataFmt);
+    public String cadastro() {
+        String nomeCliente = input.getString("nomeCliente");
+        String data = input.getString("dataNascimento");
 
-		System.out.println("ID gerado: " + cliente.getId());
-		System.out.println("Data cadastro: " + cliente.getDataCadastroFormatada());
-		System.out.println("Data nascimento: " + cliente.getDataNascimentoFormatada());
+        if (isEmpty(nomeCliente)) {
+            addError("erro", "O preenchimento do nome do cliente é obrigatório.");
+            return ERROR;
+        }
 
-		lista.add(cliente);
+        LocalDate dataFmt;
+        try {
+            dataFmt = converterData(data);
+        } catch (DateTimeParseException e) {
+            addError("erro", "Formato de data inválido. Utilize aaaa-mm-dd ou dd/mm/aaaa.");
+            return ERROR;
+        }
 
-		output.setValue("cliente", cliente);
-		output.setValue("lista", lista);
-		output.setValue("exibirMensagem", true);
-		output.setValue("mensagem", "Novo cliente cadastrado!");
+        try (Connection conn = AppManager.getConnection()) {
+            ClienteRepository repo = new ClienteRepositoryImpl(conn);
+            ClienteService service = new ClienteService(repo);
 
-		return SUCCESS;
-	}
+            ClienteEntity cliente = new ClienteEntity(nomeCliente, dataFmt);
+            service.cadastrar(cliente);
 
-	@Override
-	public String execute() throws Exception {
-		return cadastro();
-	}
+            output.setValue("cliente", cliente);
+            output.setValue("exibirMensagem", true);
+            output.setValue("mensagem", "Cliente cadastrado com sucesso!");
+            return SUCCESS;
+        } catch (NegocioException e) {
+            addError("erro", e.getMessage());
+            return ERROR;
+        } catch (Exception e) {
+            addError("erro", "Falha ao gravar no banco: " + e.getMessage());
+            return ERROR;
+        }
+    }
+    
+    public String exibirCliente() {
+        String idStr = input.getString("id");
 
-	public String exibir() throws Exception {
-		int paginaAtual = input.getInt("page", 1);
-		if (paginaAtual < 1) {
-			paginaAtual = 1;
-		}
+        if (idStr == null || idStr.trim().isEmpty()) {
+            addError("erro", "O identificador do cliente não foi fornecido.");
+            return ERROR;
+        }
 
-		int registrosPorPagina = 5;
-		int totalRegistros = lista.size();
+        Long id;
+        try {
+            id = Long.parseLong(idStr.trim());
+        } catch (NumberFormatException e) {
+            addError("erro", "O formato do identificador deve ser numérico.");
+            return ERROR;
+        }
 
-		int totalPaginas = (int) Math.ceil((double) totalRegistros / registrosPorPagina);
-		if (totalPaginas == 0) {
-			totalPaginas = 1;
-		}
-		if (paginaAtual > totalPaginas) {
-			paginaAtual = totalPaginas;
-		}
+        try (Connection conn = AppManager.getConnection()) {
+            ClienteRepository repo = new ClienteRepositoryImpl(conn);
+            ClienteService service = new ClienteService(repo);
 
-		int inicio = (paginaAtual - 1) * registrosPorPagina;
-		int fim = Math.min(inicio + registrosPorPagina, totalRegistros);
+            ClienteEntity cliente = service.buscarPorId(id);
 
-		List<ClienteEntity> itensPaginados = (inicio < totalRegistros) 
-				? lista.subList(inicio, fim) 
-						: new ArrayList<>();
+            output.setValue("id", cliente.getId());
+            output.setValue("nomeCliente", cliente.getNomeCliente());
+            output.setValue("dataNascimento", cliente.getDataNascimentoFormatada());
+            output.setValue("cliente", cliente);
 
-				output.setValue("lista", itensPaginados);
-				output.setValue("paginaAtual", paginaAtual);
-				output.setValue("totalPaginas", totalPaginas);
-				output.setValue("totalRegistros", totalRegistros);
+            return SUCCESS;
+        } catch (NegocioException e) {
+            addError("erro", e.getMessage());
+            return ERROR;
+        } catch (Exception e) {
+            addError("erro", "Falha técnica ao consultar o cliente na base de dados: " + e.getMessage());
+            return ERROR;
+        }
+    }
 
-				return SUCCESS;
-	}
-	
-	public String excluir() {
-		String idStr = input.getString("id");
-
-		if (idStr == null || isEmpty(idStr)) {
-			addError("erro", "Identificador do cliente não foi fornecido.");
-			return ERROR;
-		}
-
-		try {
-			Long id = Long.parseLong(idStr);
-
-			boolean removido = lista.removeIf(item -> item.getId().equals(id));
-
-			if (!removido) {
-				addError("erro", "Cliente não encontrado para exclusão.");
-				return ERROR;
-			}
-
-		} catch (NumberFormatException e) {
-			addError("erro", "Formato de identificador inválido.");
-			return ERROR;
-		}
-		System.out.println("Exclusão ok do cliente com id: " + idStr);
-
-		return SUCCESS;
-	}
-	
-	
-	public String exibirCliente() {
-	    String idStr = input.getString("id");
-	    
-	    System.out.println("item id = " + idStr);
-	    if (idStr == null || idStr.trim().isEmpty()) {
-	        addError("erro", "ID não informado para edição.");
-	        return ERROR;
-	    }
-	    
-	    ClienteEntity cliente = null;
-	    try {
-	        Long id = Long.parseLong(idStr);
-	        
-	        System.out.println("item id = " + id);
-	         cliente = lista.stream()
-	                                   .filter(x -> x.getId().equals(id))
-	                                   .findFirst()
-	                                   .orElse(null);
-	                                   
-	        if (cliente == null) {
-	            addError("erro", "Item não encontrado no sistema.");
-	            return ERROR;
-	        }
-	        
-	        output.setValue("id", cliente.getId());
-	        output.setValue("nomeCliente", cliente.getNomeCliente());
-	        output.setValue("dataNascimento", cliente.getDataNascimentoFormatada());
-	        
-	        output.setValue("cliente", cliente);
-	        
-	    } catch (NumberFormatException e) {
-	        addError("erro", "Formato de ID inválido.");
-	        return ERROR;
-	    }
-	    
-	    
-	    
-	    return SUCCESS;
-	}
-	
-	public String atualizarCliente() {
-
+    public String atualizarCliente() {
         Long id = input.getLong("id");
         String nomeCliente = input.getString("nomeCliente");
         String dataNascimento = input.getString("dataNascimento");
-        
 
-        if (id == null || isEmpty(nomeCliente) || dataNascimento == null || dataNascimento.trim().isEmpty() ) {
-            addError("erro", "Todos os campos devem ser preenchidos corretamente.");
+        if (id == null || isEmpty(nomeCliente)) {
+            addError("erro", "Todos os campos obrigatórios devem ser preenchidos.");
             return ERROR;
         }
 
-        
         LocalDate dataFmt = null;
         try {
-        	dataFmt = LocalDate.parse(dataNascimento);
-        } catch (DateTimeParseException e1) {
-			try {
-				dataFmt = LocalDate.parse(dataNascimento, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-			} catch (DateTimeParseException e2) {
-				addError("erro", "Formato de data inválido. Use aaaa-mm-dd ou dd/mm/aaaa");
-				return ERROR;
-			}
-		}
-
-        ClienteEntity cliente = lista.stream()
-                .filter(i -> i.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-
-        if (cliente == null) {
-            addError("erro", "Item não localizado para atualização.");
+            if (dataNascimento != null && !dataNascimento.trim().isEmpty()) {
+                dataFmt = converterData(dataNascimento);
+            }
+        } catch (DateTimeParseException e) {
+            addError("erro", "Formato de data inválido. Utilize aaaa-mm-dd ou dd/mm/aaaa.");
             return ERROR;
         }
 
-        cliente.setNomeCliente(nomeCliente);
-        cliente.setDataNascimento(dataFmt);
+        try (Connection conn = AppManager.getConnection()) {
+            ClienteRepository repo = new ClienteRepositoryImpl(conn);
+            ClienteService service = new ClienteService(repo);
 
-        return SUCCESS;
+            ClienteEntity cliente = new ClienteEntity();
+            cliente.setId(id);
+            cliente.setNomeCliente(nomeCliente);
+            cliente.setDataNascimento(dataFmt);
+
+            service.atualizar(cliente);
+
+            output.setValue("exibirMensagem", true);
+            output.setValue("mensagem", "Cliente atualizado com sucesso!");
+            return SUCCESS;
+        } catch (NegocioException e) {
+            addError("erro", e.getMessage());
+            return ERROR;
+        } catch (Exception e) {
+            addError("erro", "Erro ao atualizar dados do cliente: " + e.getMessage());
+            return ERROR;
+        }
+    }
+
+    public String excluir() {
+        String idStr = input.getString("id");
+
+        if (idStr == null || isEmpty(idStr)) {
+            addError("erro", "Identificador do cliente não fornecido.");
+            return ERROR;
+        }
+
+        Long id;
+        try {
+            id = Long.parseLong(idStr.trim());
+        } catch (NumberFormatException e) {
+            addError("erro", "Formato de identificador numérico inválido.");
+            return ERROR;
+        }
+
+        try (Connection conn = AppManager.getConnection()) {
+            ClienteRepository repo = new ClienteRepositoryImpl(conn);
+            ClienteService service = new ClienteService(repo);
+
+            service.excluir(id);
+
+            output.setValue("exibirMensagem", true);
+            output.setValue("mensagem", "Cliente excluído com sucesso!");
+            return SUCCESS;
+        } catch (NumberFormatException e) {
+            addError("erro", "Formato de identificador numérico inválido.");
+            return ERROR;
+        } catch (NegocioException e) {
+            addError("erro", e.getMessage());
+            return ERROR;
+        } catch (Exception e) {
+            addError("erro", "Erro ao remover registo da base de dados: " + e.getMessage());
+            return ERROR;
+        }
+    }
+
+    private LocalDate converterData(String data) {
+        if (data == null || data.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(data.trim(), FMT_DATA_ISO);
+        } catch (DateTimeParseException e) {
+            return LocalDate.parse(data.trim(), FMT_DATA_BR);
+        }
     }
 }
