@@ -1,6 +1,7 @@
 package org.model.repositories.impl;
 
 import java.sql.Connection;
+
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -176,6 +177,7 @@ public class ClienteRepositoryImpl implements ClienteRepository {
         }
     }
 
+    
     private ClienteEntity mapearCliente(ResultSet rs) throws SQLException {
         ClienteEntity cliente = new ClienteEntity();
         cliente.setId(rs.getLong("id"));

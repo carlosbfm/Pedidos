@@ -94,6 +94,7 @@ public class ItemEntity {
         if (this.precoItem == null || this.quantidadeDoItem == null) {
             return BigDecimal.ZERO;
         }
+        // entender ele vai perguntar
         return this.precoItem.multiply(BigDecimal.valueOf(this.quantidadeDoItem));
     }
 

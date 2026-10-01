@@ -22,10 +22,10 @@ public class ItemAction extends BaseAction {
 	    int limite = 5;
 
 	    try (Connection conn = AppManager.getConnection()) {
-	        ItemRepository repo = new ItemRepositoryImpl(conn);
-	        ItemService service = new ItemService(repo);
+	        ItemRepository itemRepo = new ItemRepositoryImpl(conn);
+	        ItemService itemService = new ItemService(itemRepo);
 
-	        Page<ItemEntity> pagina = service.listarPaginado(paginaAtual, limite);
+	        Page<ItemEntity> pagina = itemService.listarPaginado(paginaAtual, limite);
 
 	        output.setValue("lista", pagina.getRegistros());
 	        output.setValue("paginaAtual", pagina.getPaginaAtual());
@@ -42,7 +42,7 @@ public class ItemAction extends BaseAction {
 	    }
 	}
 
-    public String cadastro() {
+    public String salvar() {
         output.setValue("listaTipoUnd", UnidadeDeMedida.values());
         String nome = input.getString("itemNome");
         String precoUnitarioStr = input.getString("itemPreco");
@@ -93,11 +93,11 @@ public class ItemAction extends BaseAction {
         }
 
         try (Connection conn = AppManager.getConnection()) {
-            ItemRepository repo = new ItemRepositoryImpl(conn);
-            ItemService service = new ItemService(repo);
+            ItemRepository itemRepo = new ItemRepositoryImpl(conn);
+            ItemService itemService = new ItemService(itemRepo);
 
             ItemEntity item = new ItemEntity(nome, precoUnitario, tipo, quantidade);
-            service.cadastrar(item);
+            itemService.salvar(item);
 
             output.setValue("item", item);
             output.setValue("mensagem", "Item cadastrado com sucesso!");
@@ -112,7 +112,7 @@ public class ItemAction extends BaseAction {
     }
 
     public String exibirItem() {
-        output.setValue("listaTipoUnd", UnidadeDeMedida.values());
+    	output.setValue("listaTipoUnd", UnidadeDeMedida.values());
         String idStr = input.getString("id");
 
         if (idStr == null || isEmpty(idStr)) {
@@ -129,17 +129,16 @@ public class ItemAction extends BaseAction {
         }
 
         try (Connection conn = AppManager.getConnection()) {
-            ItemRepository repo = new ItemRepositoryImpl(conn);
-            ItemService service = new ItemService(repo);
+            ItemRepository itemRepo = new ItemRepositoryImpl(conn);
+            ItemService itemService = new ItemService(itemRepo);
 
-            ItemEntity item = service.buscarPorId(id);
+            ItemEntity item = itemService.buscarPorId(id);
 
             output.setValue("id", item.getId());
             output.setValue("nomeItem", item.getNomeItem());
             output.setValue("precoItem", item.getPrecoItem());
             output.setValue("quantidadeDoItem", item.getQuantidadeDoItem());
             output.setValue("tipoUnidadeDeMedida", item.getTipoUnidadeDeMedida());
-            output.setValue("item", item);
 
             return SUCCESS;
         } catch (NegocioException e) {
@@ -149,6 +148,7 @@ public class ItemAction extends BaseAction {
             addError("erro", "Erro ao recuperar dados do item: " + e.getMessage());
             return ERROR;
         }
+        
     }
 
     public String atualizarItem() {
@@ -183,10 +183,10 @@ public class ItemAction extends BaseAction {
         }
 
         try (Connection conn = AppManager.getConnection()) {
-            ItemRepository repo = new ItemRepositoryImpl(conn);
-            ItemService service = new ItemService(repo);
+            ItemRepository itemRepo = new ItemRepositoryImpl(conn);
+            ItemService itemService = new ItemService(itemRepo);
 
-            ItemEntity item = service.buscarPorId(id);
+            ItemEntity item = itemService.buscarPorId(id);
             item.setNomeItem(nome);
             item.setPrecoItem(novoPreco);
             item.setTipoUnidadeDeMedida(unidade);
@@ -199,7 +199,7 @@ public class ItemAction extends BaseAction {
                 item.removeQuantidade(Math.abs(diferenca));
             }
 
-            service.atualizar(item);
+            itemService.atualizar(item);
 
             output.setValue("mensagem", "Item atualizado com sucesso!");
             return SUCCESS;
@@ -229,10 +229,10 @@ public class ItemAction extends BaseAction {
         }
 
         try (Connection conn = AppManager.getConnection()) {
-            ItemRepository repo = new ItemRepositoryImpl(conn);
-            ItemService service = new ItemService(repo);
+            ItemRepository itemRepo = new ItemRepositoryImpl(conn);
+            ItemService itemService = new ItemService(itemRepo);
 
-            service.excluir(id);
+            itemService.excluir(id);
 
             output.setValue("mensagem", "Item excluído com sucesso!");
             return SUCCESS;

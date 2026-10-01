@@ -28,11 +28,11 @@ public class ClienteAction extends BaseAction {
 		int limite = 5;
 
 		try (Connection conn = AppManager.getConnection()) {
-			ClienteRepository repo = new ClienteRepositoryImpl(conn);
+			ClienteRepository clienteRepo = new ClienteRepositoryImpl(conn);
 			PedidoRepository pedidoRepo = new PedidoRepositoryImpl(conn);
-			ClienteService service = new ClienteService(repo, pedidoRepo);
+			ClienteService clienteService = new ClienteService(clienteRepo, pedidoRepo);
 
-			Page<ClienteEntity> pagina = service.listarPaginado(paginaAtual, limite);
+			Page<ClienteEntity> pagina = clienteService.listarPaginado(paginaAtual, limite);
 
 			output.setValue("lista", pagina.getRegistros());
 			output.setValue("paginaAtual", pagina.getPaginaAtual());
@@ -72,10 +72,10 @@ public class ClienteAction extends BaseAction {
 			try (Connection conn = AppManager.getConnection()) {
 				ClienteRepository repo = new ClienteRepositoryImpl(conn);
 				PedidoRepository pedidoRepo = new PedidoRepositoryImpl(conn);
-				ClienteService service = new ClienteService(repo,pedidoRepo);
+				ClienteService clienteService = new ClienteService(repo,pedidoRepo);
 
 				ClienteEntity cliente = new ClienteEntity(nomeCliente, dataFmt);
-				service.salvar(cliente);
+				clienteService.salvar(cliente);
 
 				output.setValue("exibirMensagem", true);
 				output.setValue("mensagem", "Cliente cadastrado com sucesso!");
@@ -112,9 +112,9 @@ public class ClienteAction extends BaseAction {
 		}
 
 		try (Connection conn = AppManager.getConnection()) {
-			ClienteRepository repo = new ClienteRepositoryImpl(conn);
+			ClienteRepository clienteRepo = new ClienteRepositoryImpl(conn);
 			PedidoRepository pedidoRepo = new PedidoRepositoryImpl(conn);
-			ClienteService service = new ClienteService(repo,pedidoRepo);
+			ClienteService service = new ClienteService(clienteRepo,pedidoRepo);
 
 			ClienteEntity cliente = service.buscarPorId(id);
 
@@ -171,9 +171,9 @@ public class ClienteAction extends BaseAction {
 		}
 
 		try (Connection conn = AppManager.getConnection()) {
-			ClienteRepository repo = new ClienteRepositoryImpl(conn);
+			ClienteRepository clienteRepo = new ClienteRepositoryImpl(conn);
 			PedidoRepository pedidoRepo = new PedidoRepositoryImpl(conn);
-			ClienteService clienteService = new ClienteService(repo,pedidoRepo);
+			ClienteService clienteService = new ClienteService(clienteRepo,pedidoRepo);
 
 			ClienteEntity cliente = clienteService.buscarPorId(id); 
 			cliente.setNomeCliente(nomeCliente);
@@ -212,11 +212,11 @@ public class ClienteAction extends BaseAction {
 		}
 
 		try (Connection conn = AppManager.getConnection()) {
-			ClienteRepository repo = new ClienteRepositoryImpl(conn);
+			ClienteRepository clienteRepo = new ClienteRepositoryImpl(conn);
 			PedidoRepository pedidoRepo = new PedidoRepositoryImpl(conn);
-			ClienteService service = new ClienteService(repo, pedidoRepo);
+			ClienteService clienteService = new ClienteService(clienteRepo, pedidoRepo);
 
-			service.excluir(id);
+			clienteService.excluir(id);
 
 			output.setValue("exibirMensagem", true);
 			output.setValue("mensagem", "Cliente excluído com sucesso!");

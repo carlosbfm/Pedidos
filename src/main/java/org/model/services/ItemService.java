@@ -6,6 +6,7 @@ import java.util.List;
 import org.model.entities.ItemEntity;
 import org.model.exceptions.NegocioException;
 import org.model.repositories.ItemRepository;
+import org.model.repositories.PedidoRepository;
 import org.model.utils.Page;
 
 public class ItemService {
@@ -49,7 +50,7 @@ public class ItemService {
         return itemRepository.buscarPorNomeItem(nome.trim());
     }
 
-    public void cadastrar(ItemEntity item) {
+    public void salvar(ItemEntity item) {
         validarItem(item);
         itemRepository.salvar(item);
     }

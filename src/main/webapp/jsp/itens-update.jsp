@@ -222,6 +222,12 @@ button {
 			<c:if test="${not empty erro}">
 				<div class="alert-error">${erro}</div>
 			</c:if>
+			
+			<mtw:hasError>
+                <div class="alert-error">
+                    <mtw:error field="erro" />
+                </div>
+            </mtw:hasError>
 
 		</mtw:form>
 

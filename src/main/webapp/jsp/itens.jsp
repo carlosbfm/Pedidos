@@ -107,7 +107,7 @@ button {
 </head>
 <body>
 
-	<form action="itens.cadastro.mtw" method="GET" style="display: inline;">
+	<form action="itens.salvar.mtw" method="GET" style="display: inline;">
 		<button type="submit">NOVO ITEM+</button>
 	</form>
 
