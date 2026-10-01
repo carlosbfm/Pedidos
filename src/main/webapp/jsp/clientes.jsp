@@ -103,6 +103,18 @@ button {
 	background-color: #f8d7da;
 	transform: scale(0.95);
 }
+
+.alert-error {
+	color: #fff;
+	background-color: #d9534f;
+	font-weight: bold;
+	padding: 8px 12px;
+	margin-top: 10px;
+	border-radius: 4px;
+	width: fit-content;
+	max-width: 100%;
+	box-sizing: border-box;
+}
 </style>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -111,7 +123,7 @@ button {
 </head>
 <body>
 
-	
+
 	<form action="clientes.cadastro.mtw" method="GET"
 		style="display: inline;">
 		<button type="submit">NOVO CLIENTE +</button>
@@ -131,9 +143,9 @@ button {
 
 			<c:forEach items="${lista}" var="cliente">
 				<tr>
-					<td><a href="clientes.exibirCliente.mtw?id=${cliente.id}" font-weight:
-						bold;" class="btn-icone-editar" title="Editar Cliente"> <i
-							class="bi bi-pencil-square"></i>
+					<td><a href="clientes.exibirCliente.mtw?id=${cliente.id}"
+						font-weight: bold;" class="btn-icone-editar"
+						title="Editar Cliente"> <i class="bi bi-pencil-square"></i>
 					</a></td>
 					<td>${cliente.id}</td>
 					<td>${cliente.nomeCliente}</td>
@@ -144,15 +156,30 @@ button {
 						style="color: red; font-weight: bold;" class="btn-icone-excluir"
 						title="Excluir item"> <i class="bi bi-trash"></i>
 					</a></td>
+
 				</tr>
 			</c:forEach>
 
-			<c:if test="${empty lista}">
-				<tr>
-					<td colspan="5" style="text-align: center;">Nenhum item
-						cadastrado até o momento.</td>
-				</tr>
-			</c:if>
+
+			<c:choose>
+				<c:when test="${not empty erro}">
+					<tr>
+						<td colspan="5" >
+							<div class="alert-error" >
+								<c:out value="${erro}" />
+							</div>
+						</td>
+					</tr>
+				</c:when>
+
+				<c:when test="${empty lista}">
+					<tr>
+						<td colspan="5" style="text-align: center;">Nenhum item
+							cadastrado até o momento.</td>
+					</tr>
+				</c:when>
+			</c:choose>
+
 		</tbody>
 	</table>
 

@@ -6,7 +6,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Editar Item</title>
-<!-- Bootstrap Icons para os símbolos de + e - -->
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
@@ -55,6 +54,7 @@ h2 {
 	margin-top: 14px;
 	margin-bottom: 6px;
 }
+
 .forms input[type="text"] {
 	width: 100%;
 	padding: 8px 10px;
@@ -66,7 +66,7 @@ h2 {
 	transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.forms input[type="text"]:focus{
+.forms input[type="text"]:focus {
 	border-color: #0275d8;
 	box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.2);
 	outline: none;
@@ -113,36 +113,39 @@ button {
 	cursor: pointer;
 	transition: background-color 0.2s ease;
 }
-
 </style>
 
 </head>
 <body>
-	<h2>Editar Item</h2>
+	<h2>Editar Cliente</h2>
 	<div class="forms">
 
-		<form action="clientes.exibir.mtw" method="GET" style="display: inline;">
+		<form action="clientes.exibir.mtw" method="GET"
+			style="display: inline;">
 			<button type="submit">Voltar</button>
 		</form>
-		
+
 
 		<mtw:form action="clientes.atualizarCliente.mtw" method="POST">
 
-			<mtw:input type="hidden" name="id" />
+			<mtw:input type="hidden" name="id" value="${id}" />
 
 			<label>Nome do Cliente:</label>
-			<mtw:input type="text" name="nomeCliente" size="30" maxlength="30" />
+			<mtw:input type="text" name="nomeCliente" value="${nomeCliente}"
+				size="30" maxlength="255" />
 
 			<label>Data Nascimento:</label>
-			<mtw:input type="text" name="dataNascimento" />
-			<mtw:input type="hidden" name="dataCadastroCliente"/>
+			<mtw:input type="text" name="dataNascimento"
+				value="${dataNascimento}" />
 
 
 			<input type="submit" value="Salvar Alterações" />
-
-			<c:if test="${not empty erro}">
-				<div class="alert-error">${erro}</div>
-			</c:if>
+			
+			<mtw:hasError>
+                <div class="alert-error">
+                    <mtw:error field="erro" />
+                </div>
+            </mtw:hasError>
 
 		</mtw:form>
 

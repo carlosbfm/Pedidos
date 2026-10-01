@@ -1,9 +1,9 @@
 package org.model.entities;
 
 import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 
 public class ClienteEntity {
 
@@ -26,7 +26,8 @@ public class ClienteEntity {
     public Long getId() {
         return id;
     }
-
+    
+    //rever esse method setId
     public void setId(Long id) {
         this.id = id;
     }
@@ -63,26 +64,4 @@ public class ClienteEntity {
         return this.dataCadastroCliente != null ? this.dataCadastroCliente.format(FMT_TIMESTAMP_BR) : "";
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ClienteEntity that = (ClienteEntity) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "ClienteEntity{" +
-                "id=" + id +
-                ", nomeCliente='" + nomeCliente + '\'' +
-                ", dataNascimento=" + dataNascimento +
-                ", dataCadastroCliente=" + dataCadastroCliente +
-                '}';
-    }
 }

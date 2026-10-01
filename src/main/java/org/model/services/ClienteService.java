@@ -1,90 +1,102 @@
 package org.model.services;
 
 import java.time.LocalDate;
+
 import java.util.List;
 
 import org.model.entities.ClienteEntity;
 import org.model.exceptions.NegocioException;
 import org.model.repositories.ClienteRepository;
+import org.model.repositories.PedidoRepository;
 import org.model.utils.Page;
 
 public class ClienteService {
 
-    private final ClienteRepository clienteRepository;
+	private final ClienteRepository clienteRepository;
+	private final PedidoRepository pedidoRepo;
+	
+	
 
-    public ClienteService(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
-    }
-    
-    public List<ClienteEntity> listarTodos() {
-        return clienteRepository.listarTodos();
-    }
-    
-    public Page<ClienteEntity> listarPaginado(int pagina, int tamanhoPagina) {
-        if (pagina < 1) pagina = 1;
-        if (tamanhoPagina <= 0) tamanhoPagina = 5;
+	public ClienteService(ClienteRepository clienteRepository, PedidoRepository pedidoRepo) {
+		this.clienteRepository = clienteRepository;
+		this.pedidoRepo = pedidoRepo;
+	}
 
-        int totalRegistros = clienteRepository.contarTotal();
-        int offset = (pagina - 1) * tamanhoPagina;
+	public List<ClienteEntity> listarTodos() {
+		return clienteRepository.listarTodos();
+	}
 
-        List<ClienteEntity> clientes = clienteRepository.listarPaginado(tamanhoPagina, offset);
-        return new Page<>(clientes, pagina, tamanhoPagina, totalRegistros);
-    }
+	public Page<ClienteEntity> listarPaginado(int pagina, int tamanhoPagina) {
+		if (pagina < 1) pagina = 1;
+		if (tamanhoPagina <= 0) tamanhoPagina = 5;
 
-    public ClienteEntity buscarPorId(Long id) {
-        if (id == null || id <= 0) {
-            throw new NegocioException("ID inválido para busca.");
-        }
-        ClienteEntity cliente = clienteRepository.buscarPorId(id);
-        if (cliente == null) {
-            throw new NegocioException("Cliente com ID " + id + " não encontrado.");
-        }
-        return cliente;
-    }
+		int totalRegistros = clienteRepository.contarTotal();
+		int offset = (pagina - 1) * tamanhoPagina;
 
-    public List<ClienteEntity> buscarPorNome(String nome) {
-        if (nome == null || nome.trim().isEmpty()) {
-            throw new NegocioException("O nome para busca não pode estar vazio.");
-        }
-        return clienteRepository.buscarPorNome(nome.trim());
-    }
+		List<ClienteEntity> clientes = clienteRepository.listarPaginado(tamanhoPagina, offset);
+		return new Page<>(clientes, pagina, tamanhoPagina, totalRegistros);
+	}
 
-    public void cadastrar(ClienteEntity cliente) {
-        validarCliente(cliente);
-        clienteRepository.salvar(cliente);
-    }
+	public ClienteEntity buscarPorId(Long id) {
+		if (id == null || id <= 0) {
+			throw new NegocioException("ID inválido para busca.");
+		}
+		ClienteEntity cliente = clienteRepository.buscarPorId(id);
+		if (cliente == null) {
+			throw new NegocioException("Cliente com ID " + id + " não encontrado.");
+		}
+		return cliente;
+	}
 
-    public void atualizar(ClienteEntity cliente) {
-        if (cliente.getId() == null || cliente.getId() <= 0) {
-            throw new NegocioException("ID obrigatório para atualizar o cliente.");
-        }
-        
-        buscarPorId(cliente.getId());
-        validarCliente(cliente);
+	public List<ClienteEntity> buscarPorNome(String nome) {
+		if (nome == null || nome.trim().isEmpty()) {
+			throw new NegocioException("O nome para busca não pode estar vazio.");
+		}
+		return clienteRepository.buscarPorNome(nome.trim());
+	}
 
-        clienteRepository.atualizar(cliente);
-    }
+	public void salvar(ClienteEntity cliente) {
+		validarCliente(cliente);
+		clienteRepository.salvar(cliente);
+	}
 
-    public void excluir(Long id) {
-        if (id == null || id <= 0) {
-            throw new NegocioException("ID inválido para exclusão.");
-        }
-        
-        buscarPorId(id);
-        clienteRepository.excluir(id);
-    }
+	public void atualizar(ClienteEntity cliente) {
+		if (cliente.getId() == null || cliente.getId() <= 0) {
+			throw new NegocioException("ID obrigatório para atualizar o cliente.");
+		}
 
-    private void validarCliente(ClienteEntity cliente) {
-        if (cliente == null) {
-            throw new NegocioException("Entidade cliente não pode ser nula.");
-        }
+		buscarPorId(cliente.getId());
+		validarCliente(cliente);
 
-        if (cliente.getNomeCliente() == null || cliente.getNomeCliente().trim().length() < 3) {
-            throw new NegocioException("O nome do cliente deve possuir pelo menos 3 caracteres.");
-        }
+		clienteRepository.atualizar(cliente);
+	}
 
-        if (cliente.getDataNascimento() != null && cliente.getDataNascimento().isAfter(LocalDate.now())) {
-            throw new NegocioException("A data de nascimento não pode estar no futuro.");
-        }
-    }
+	public void excluir(Long id) {
+		if (id == null || id <= 0) {
+			throw new NegocioException("ID inválido para exclusão.");
+		}
+
+		boolean temPedidos = pedidoRepo.buscarPorClienteId(id).size() > 0;
+		if (temPedidos) {
+			throw new NegocioException("Este cliente não pode ser removido pois já possui histórico de pedidos registrados.");
+		}
+
+		buscarPorId(id);
+		clienteRepository.excluir(id);
+	}
+
+	void validarCliente(ClienteEntity cliente) {
+		
+		if (cliente == null) {
+			throw new NegocioException("Entidade cliente não pode ser nula.");
+		}
+
+		if (cliente.getNomeCliente() == null || cliente.getNomeCliente().trim().length() < 3) {
+			throw new NegocioException("O nome do cliente deve possuir pelo menos 3 caracteres.");
+		}
+
+		if (cliente.getDataNascimento() != null && cliente.getDataNascimento().isAfter(LocalDate.now())) {
+			throw new NegocioException("A data de nascimento não pode estar no futuro.");
+		}
+	}
 }
