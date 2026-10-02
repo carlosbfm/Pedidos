@@ -199,22 +199,33 @@ button:hover {
 			<button type="submit">Voltar</button>
 		</form>
 
-		<h2 style="margin-top: 15px;" name="id">Conferência do Pedido #${idConferencia}</h2>
+		<h2 style="margin-top: 15px;" name="id">Conferência do Pedido
+			#${idConferencia}</h2>
 
 		<mtw:hasError>
 			<div class="alert-error">
-				<mtw:error field="erro"/>
+				<mtw:error field="erro" />
 			</div>
 		</mtw:hasError>
 
 		<div class="cabecalho-info">
 			<div>
-				<p><strong>Cliente:</strong> ${pedido.cliente.nomeCliente} (ID: #${pedido.cliente.id})</p>
-				<p><strong>Emissão:</strong> ${pedido.dataHoraEmissaoFormatada}</p>
+				<p>
+					<strong>Cliente:</strong> ${pedido.cliente.nomeCliente} (ID:
+					#${pedido.cliente.id})
+				</p>
+				<p>
+					<strong>Emissão:</strong> ${pedido.dataHoraEmissaoFormatada}
+				</p>
 			</div>
 			<div style="text-align: right;">
-				<p><strong>Status Atual:</strong> <span class="status-badge">${pedido.status.descricao}</span></p>
-				<p><strong>Pagamento Registrado:</strong> ${pedido.formaPagamento.formaDePagamento}</p>
+				<p>
+					<strong>Status Atual:</strong> <span class="status-badge">${pedido.status.descricao}</span>
+				</p>
+				<p>
+					<strong>Pagamento Registrado:</strong>
+					${pedido.formaPagamento.formaDePagamento}
+				</p>
 			</div>
 		</div>
 
@@ -236,24 +247,26 @@ button:hover {
 						<td>R$ ${item.precoItem}</td>
 						<td>${item.quantidadeDoItem}</td>
 						<td>R$ ${item.precoItem * item.quantidadeDoItem}</td>
-						<td style="text-align: center;">
-							<c:if test="${pedido.status.name() != 'CONCLUIDO' && pedido.status.name() != 'CANCELADO'}">
-								<form action="tabela.excluirItem.mtw" method="POST" style="display:inline; margin: 0;">
+						<td style="text-align: center;"><c:if
+								test="${pedido.status.name() != 'CONCLUIDO' && pedido.status.name() != 'CANCELADO'}">
+								<form action="tabela.excluirItem.mtw" method="POST"
+									style="display: inline; margin: 0;">
 									<input type="hidden" name="pedidoId" value="${pedido.id}">
 									<input type="hidden" name="itemId" value="${item.id}">
-									<button type="submit" class="btn-icone-excluir" title="Excluir item e devolver ao estoque"
+									<button type="submit" class="btn-icone-excluir"
+										title="Excluir item e devolver ao estoque"
 										onclick="return confirm('Deseja retirar este item do pedido? O estoque será estornado.');">
 										<i class="bi bi-trash"></i>
 									</button>
 								</form>
-							</c:if>
-						</td>
+							</c:if></td>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
 
-		<c:if test="${pedido.status.name() != 'CONCLUIDO' && pedido.status.name() != 'CANCELADO'}">
+		<c:if
+			test="${pedido.status.name() != 'CONCLUIDO' && pedido.status.name() != 'CANCELADO'}">
 			<div class="box-conferencia">
 				<h3>Conferência e Fechamento</h3>
 
@@ -262,32 +275,37 @@ button:hover {
 
 					<div class="linha-conferencia">
 						<div class="coluna-campo">
-							<label>Quantidade de Itens:</label>
-							<input type="number" name="quantidadeConferida" value="${quantidadeTotal}" readonly />
+							<label>Quantidade de Itens:</label> <input type="number"
+								name="quantidadeConferida" value="${quantidadeTotal}" readonly />
 						</div>
 
 						<div class="coluna-campo">
-							<label>Valor Total (R$):</label>
-							<input type="text" name="valorConferido" value="${valorTotal}" readonly />
+							<label>Valor Total (R$):</label> <input type="text"
+								name="valorConferido" value="${valorTotal}" readonly />
 						</div>
 
 						<div class="coluna-campo">
-							<label>Forma de Pagamento:</label>
-							<input type="text" name="formaPagamentoConferida" value="${pedido.formaPagamento.formaDePagamento}" readonly />
+							<label>Forma de Pagamento:</label> <input type="text"
+								name="formaPagamentoConferida"
+								value="${pedido.formaPagamento.formaDePagamento}" readonly />
 						</div>
 					</div>
-
 					<div style="display: flex; gap: 10px;">
 						<button type="submit">Concluir Pedido</button>
-
-						<form action="form.cancelar.mtw?id=${pedido.id}" method="GET" style="display: inline; margin: 0;">
-							<button type="submit" class="btn-cancelar-pedido"
-								onclick="return confirm('Atenção: Deseja cancelar o pedido completo? Todos os itens voltarão ao estoque.');">
-								Cancelar Pedido
-							</button>
-						</form>
 					</div>
+
 				</form>
+				<div style="display: flex; gap: 10px;">
+
+
+					<form action="form.cancelar.mtw" method="GET"
+						style="display: inline; margin: 0;">
+						<input type="hidden" name="idPedido" value="${pedido.id}">
+						<button type="submit" class="btn-cancelar-pedido"
+							onclick="return confirm('Atenção: Deseja cancelar o pedido completo? Todos os itens voltarão ao estoque.');">
+							Cancelar Pedido</button>
+					</form>
+				</div>
 			</div>
 		</c:if>
 
