@@ -3,6 +3,7 @@ package org.enums;
 public enum StatusPedido {
     CRIADO("Criado"),
     PENDENTE("Preparando o pedido"),
+    CANCELADO("Cancelado"),
     CONCLUIDO("Concluído");
 
     private final String descricao;
@@ -28,16 +29,20 @@ public enum StatusPedido {
     }
     
     public boolean podeTransitarPara(StatusPedido novoStatus) {
-    	
-    	if (novoStatus == null) {
+        if (novoStatus == null) {
             return false;
         }
-    	
+        
         switch (this) {
-            case CRIADO: return novoStatus == PENDENTE;
-            case PENDENTE: return novoStatus == CONCLUIDO;
-            case CONCLUIDO: return false;
-            default: return false;
+            case CRIADO: 
+                return novoStatus == PENDENTE || novoStatus == CANCELADO;
+            case PENDENTE: 
+                return novoStatus == CONCLUIDO || novoStatus == CANCELADO;
+            case CONCLUIDO: 
+            case CANCELADO: 
+                return false; 
+            default: 
+                return false;
         }
     }
 }

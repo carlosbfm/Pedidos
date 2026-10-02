@@ -6,22 +6,34 @@ public enum FormaDePagamento {
 	CREDITO("CARTÃO DE CRÉDITO"),
 	DINHEIRO("DINHEIRO");
 	
-	private String desccricao;
+	private String descricao;
 	
 	
 	FormaDePagamento(String descricao ) {
-		this.desccricao = descricao;
+		this.descricao = descricao;
 	}
 
 
 	public String getDesccricao() {
-		return desccricao;
+		return descricao;
 	}
 	
 	@Override
 	public String toString(){
-		return desccricao;
+		return descricao;
 	}
+	
+	public static FormaDePagamento fromString(String statusTexto) {
+        if (statusTexto == null || statusTexto.trim().isEmpty()) {
+            return null;
+        }
+        for (FormaDePagamento sp : values()) {
+            if (sp.name().equalsIgnoreCase(statusTexto.trim())) {
+                return sp;
+            }
+        }
+        throw new IllegalArgumentException("Status desconhecido: " + statusTexto);
+    }
 	
 	
 }

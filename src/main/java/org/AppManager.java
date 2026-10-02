@@ -27,7 +27,7 @@ public class AppManager extends ApplicationManager {
 		action("/clientes", ClienteAction.class, "exibir")
 		.filter(new PaginationFilter("lista", 5))
 		.on(SUCCESS, fwd("jsp/clientes.jsp"))
-		.addConsequence(ERROR, fwd("jsp/clientes.jsp"));
+		.on(ERROR, fwd("jsp/clientes.jsp"));
 
 		action("/clientes", ClienteAction.class, "exibirCliente")
 		.on(SUCCESS, fwd("jsp/clientes-update.jsp")) 
@@ -45,7 +45,7 @@ public class AppManager extends ApplicationManager {
 		.on(SUCCESS, redir("itens.exibir.mtw")) 
 		.addConsequence(ERROR, fwd("jsp/itens-update.jsp"));
 
-		action("/itens", ItemAction.class, "cadastro")
+		action("/itens", ItemAction.class, "salvar")
 		.on(SUCCESS, fwd("jsp/itens-form.jsp"))
 		.addConsequence(ERROR, fwd("jsp/itens-form.jsp"));
 
@@ -55,14 +55,44 @@ public class AppManager extends ApplicationManager {
 
 		action("/clientes", ClienteAction.class, "excluir")
 		.on(SUCCESS, redir("clientes.exibir.mtw"))
-		.addConsequence(ERROR, fwd("jsp/clientes.jsp"));
+		.on(ERROR, fwd("jsp/clientes.jsp"));
 
 		action("/clientes", ClienteAction.class, "cadastro")
 		.on(SUCCESS, fwd("jsp/clientes-form.jsp"))
 		.addConsequence(ERROR, fwd("jsp/clientes-form.jsp"));
 
-		action("/selecionar", PedidosAction.class, "clientes")
-		.on(SUCCESS, fwd("jsp/pedidos-selecionar-cliente.jsp"));
+		action("/tabela", PedidosAction.class, "exibir")
+		    .on(SUCCESS, fwd("jsp/pedidos.jsp"))
+		    .on(ERROR, fwd("jsp/pedidos.jsp"));
+
+		action("/form", PedidosAction.class, "exibirDados")
+		    .on(SUCCESS, fwd("jsp/pedidos-form.jsp"))
+		    .on(ERROR, fwd("jsp/pedidos.jsp"));
+
+		action("/form", PedidosAction.class, "criarPedido")
+		    .on(SUCCESS, redir("tabela.exibir.mtw"))
+		    .addConsequence(ERROR, fwd("jsp/pedidos-form.jsp"));
+
+		action("/form", PedidosAction.class, "detalhes")
+		    .on(SUCCESS, fwd("jsp/pedidos-update.jsp"))
+		    .on(ERROR, fwd("jsp/pedidos.jsp"));
+
+		
+		action("/form", PedidosAction.class, "concluir")
+		    .on(SUCCESS, redir("tabela.exibir.mtw"))
+		    .on(ERROR, fwd("jsp/pedidos-update.jsp"));
+
+		action("/form", PedidosAction.class, "cancelar")
+		    .on(SUCCESS, redir("tabela.exibir.mtw"))
+		    .on(ERROR, fwd("jsp/pedidos-update.jsp"));
+		
+		action("/tabela", PedidosAction.class, "cancelar")
+	    .on(SUCCESS, redir("tabela.exibir.mtw"))
+	    .on(ERROR, fwd("jsp/pedidos-update.jsp"));
+
+		action("/tabela", PedidosAction.class, "excluirItem")
+		    .on(SUCCESS, fwd("jsp/pedidos.jsp"))
+		    .on(ERROR, fwd("jsp/pedidos-update.jsp"));
 	}
 
 	private static ConnectionHandler pool;
