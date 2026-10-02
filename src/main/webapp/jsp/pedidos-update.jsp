@@ -249,9 +249,9 @@ button:hover {
 						<td>R$ ${item.precoItem * item.quantidadeDoItem}</td>
 						<td style="text-align: center;"><c:if
 								test="${pedido.status.name() != 'CONCLUIDO' && pedido.status.name() != 'CANCELADO'}">
-								<form action="tabela.excluirItem.mtw" method="POST"
+								<form action="form.excluirItem.mtw" method="POST"
 									style="display: inline; margin: 0;">
-									<input type="hidden" name="pedidoId" value="${pedido.id}">
+									<input type="hidden" name="idPedido" value="${pedido.id}">
 									<input type="hidden" name="itemId" value="${item.id}">
 									<button type="submit" class="btn-icone-excluir"
 										title="Excluir item e devolver ao estoque"
@@ -298,9 +298,9 @@ button:hover {
 				<div style="display: flex; gap: 10px;">
 
 
-					<form action="form.cancelar.mtw" method="GET"
+					<form action="form.cancelar.mtw?idPedido=${pedido.id}" method="GET"
 						style="display: inline; margin: 0;">
-						<input type="hidden" name="idPedido" value="${pedido.id}">
+						
 						<button type="submit" class="btn-cancelar-pedido"
 							onclick="return confirm('Atenção: Deseja cancelar o pedido completo? Todos os itens voltarão ao estoque.');">
 							Cancelar Pedido</button>

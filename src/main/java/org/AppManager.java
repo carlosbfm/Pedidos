@@ -75,7 +75,7 @@ public class AppManager extends ApplicationManager {
 
 		action("/form", PedidosAction.class, "detalhes")
 		    .on(SUCCESS, fwd("jsp/pedidos-update.jsp"))
-		    .on(ERROR, fwd("jsp/pedidos.jsp"));
+		    .on(ERROR, fwd("jsp/pedidos-update.jsp"));
 
 		
 		action("/form", PedidosAction.class, "concluir")
@@ -92,7 +92,11 @@ public class AppManager extends ApplicationManager {
 
 		action("/tabela", PedidosAction.class, "excluirItem")
 		    .on(SUCCESS, fwd("jsp/pedidos.jsp"))
-		    .on(ERROR, fwd("jsp/pedidos-update.jsp"));
+		    .on(ERROR, fwd("jsp/pedidos.jsp"));
+		
+		action("/form", PedidosAction.class, "excluirItem")
+	    .on(SUCCESS, fwd("jsp/pedidos-update.jsp"))
+	    .on(ERROR, fwd("jsp/pedidos-update.jsp"));
 	}
 
 	private static ConnectionHandler pool;

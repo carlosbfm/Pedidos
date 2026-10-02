@@ -121,7 +121,7 @@ public class PedidoService {
                 .orElseThrow(() -> new NegocioException("Item ID " + itemId + " não pertence a este pedido."));
 
         itemService.adicionarEstoque(itemParaRemover.getId(), itemParaRemover.getQuantidadeDoItem());
-
+        
         pedidoRepository.removerItemDoPedido(pedidoId, itemId);
     }
 
