@@ -298,9 +298,9 @@ button:hover {
 				<div style="display: flex; gap: 10px;">
 
 
-					<form action="form.cancelar.mtw?idPedido=${pedido.id}" method="GET"
-						style="display: inline; margin: 0;">
-						
+					<form action="form.cancelar.mtw?idPedido=${pedido.id}"
+						method="POST" style="display: inline; margin: 0;">
+
 						<button type="submit" class="btn-cancelar-pedido"
 							onclick="return confirm('Atenção: Deseja cancelar o pedido completo? Todos os itens voltarão ao estoque.');">
 							Cancelar Pedido</button>
@@ -309,6 +309,7 @@ button:hover {
 			</div>
 		</c:if>
 
+		
 	</div>
 
 </body>

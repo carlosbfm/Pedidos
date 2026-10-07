@@ -71,77 +71,83 @@ public class PedidosAction extends BaseAction {
 	}
 
 
-	public String criarPedido()  {
-		exibirDados();
-		Long clienteId = input.getLong("clienteId");
-		Long itemId = input.getLong("itemId");
-		int quantidade = input.getInt("quantidade", 0);
-		String formaPagamentoStr = input.getString("formaPagamento");
+	public String criarPedido() {
+	    exibirDados(); 
 
-		if (clienteId == null || clienteId <= 0) {
-			addError("erro", "Selecione um cliente válido.");
-			return ERROR;
-		}
+	    Long clienteId = input.getLong("clienteId");
+	    Long itemId = input.getLong("itemId");
+	    int quantidade = input.getInt("quantidade", 0);
+	    String formaPagamentoStr = input.getString("formaPagamento");
 
-		if (itemId == null || itemId <= 0) {
-			addError("erro", "Selecione um item válido.");
-			return ERROR;
-		}
+	    if (clienteId == null || clienteId <= 0) {
+	        addError("erro", "Selecione um cliente válido.");
+	        return ERROR;
+	    }
 
-		if (quantidade <= 0) {
-			addError("erro", "A quantidade do item deve ser superior a zero.");
-			return ERROR;
-		}
+	    if (itemId == null || itemId <= 0) {
+	        addError("erro", "Selecione um item válido.");
+	        return ERROR;
+	    }
 
-		FormaDePagamento formaPagamento;
-		try {
-			if (isEmpty(formaPagamentoStr)) {
-				addError("erro", "A forma de pagamento é obrigatória.");
-				return ERROR;
-			}
-			formaPagamento = FormaDePagamento.valueOf(formaPagamentoStr.trim().toUpperCase());
-		} catch (IllegalArgumentException e) {
-			addError("erro", "Forma de pagamento selecionada é inválida.");
-			return ERROR;
-		}
+	    if (quantidade <= 0) {
+	        addError("erro", "A quantidade do item deve ser superior a zero.");
+	        return ERROR;
+	    }
 
-		try (Connection conn = AppManager.getConnection()) {
-			PedidoService pedidoService = criarPedidoService(conn);
-			ItemRepository itemRepo = new ItemRepositoryImpl(conn);
-			ItemService itemService = new ItemService(itemRepo);
+	    FormaDePagamento formaPagamento;
+	    try {
+	        if (isEmpty(formaPagamentoStr)) {
+	            addError("erro", "A forma de pagamento é obrigatória.");
+	            return ERROR;
+	        }
+	        formaPagamento = FormaDePagamento.valueOf(formaPagamentoStr.trim().toUpperCase());
+	    } catch (IllegalArgumentException e) {
+	        addError("erro", "Forma de pagamento selecionada é inválida.");
+	        return ERROR;
+	    }
 
-			ItemEntity itemEstoque = itemService.buscarPorId(itemId);
+	    try (Connection conn = AppManager.getConnection()) {
+	        PedidoService pedidoService = criarPedidoService(conn);
+	        ItemRepository itemRepo = new ItemRepositoryImpl(conn);
+	        ItemService itemService = new ItemService(itemRepo);
+	        ClienteRepository clienteRepo = new ClienteRepositoryImpl(conn);
 
-			ItemEntity itemPedido = new ItemEntity();
-			itemPedido.setId(itemEstoque.getId());
-			itemPedido.setNomeItem(itemEstoque.getNomeItem());
-			itemPedido.setPrecoItem(itemEstoque.getPrecoItem());
-			itemPedido.addQuantidade(quantidade);
+	        ItemEntity itemEstoque = itemService.buscarPorId(itemId);
 
-			BigDecimal valorTotalCalculado = itemEstoque.getPrecoItem().multiply(BigDecimal.valueOf(quantidade));
-			PagamentoEntity pagamento = new PagamentoEntity(valorTotalCalculado, formaPagamento);
+	        ClienteEntity cliente = clienteRepo.buscarPorId(clienteId);
 
-			ClienteEntity cliente = new ClienteEntity();
-			cliente.setId(clienteId);
+	        ItemEntity itemPedido = new ItemEntity();
+	        itemPedido.setId(itemEstoque.getId());
+	        itemPedido.setNomeItem(itemEstoque.getNomeItem());
+	        itemPedido.setPrecoItem(itemEstoque.getPrecoItem());
+	        itemPedido.addQuantidade(quantidade);
 
-			PedidosEntity pedido = new PedidosEntity(cliente, pagamento, quantidade);
-			pedido.adicionarItem(itemPedido);
+	        BigDecimal valorTotalCalculado = itemEstoque.getPrecoItem().multiply(BigDecimal.valueOf(quantidade));
+	        PagamentoEntity pagamento = new PagamentoEntity(valorTotalCalculado, formaPagamento);
 
-			pedidoService.criarPedido(pedido);
+	        PedidosEntity pedido = new PedidosEntity(cliente, pagamento, quantidade);
+	        pedido.adicionarItem(itemPedido);
 
-			output.setValue("mensagem", "Pedido #" + pedido.getId() + " cadastrado com sucesso!");
-			return SUCCESS;
-		} catch (NegocioException e) {
-			addError("erro", e.getMessage());
-			return ERROR;
-		} catch (Exception e) {
-			addError("erro", "Falha técnica ao cadastrar pedido: " + e.getMessage());
-			return ERROR;
-		}
+	        pedidoService.criarPedido(pedido);
+
+	        output.setValue("pedido", pedido);
+	        output.setValue("mensagem", "Pedido #" + pedido.getId() + " cadastrado com sucesso!");
+	        
+	        return SUCCESS;
+	    } catch (NegocioException e) {
+	        addError("erro", e.getMessage());
+	        return ERROR;
+	    } catch (Exception e) {
+	        addError("erro", "Falha técnica ao cadastrar pedido: " + e.getMessage());
+	        return ERROR;
+	    }
 	}
-
+	
 	public String detalhes() {
 		Long id = input.getLong("id");
+		addError("erro",input.getString("erro"));
+		//System.out.println(input.getString("erro"));
+		
 
 		if (id == null || id <= 0) {
 			addError("erro", "Identificador de pedido inválido.");
@@ -170,7 +176,7 @@ public class PedidosAction extends BaseAction {
 			output.setValue("idConferencia", id);
 			output.setValue("quantidadeTotal", quantidadeTotal);
 			output.setValue("valorTotal", valorTotal);
-			output.setValue("formasPagamento", FormaDePagamento.values());
+			//output.setValue("formasPagamento", FormaDePagamento.values()); no jsp ele é chamado
 
 			return SUCCESS;
 		} catch (NegocioException e) {
@@ -206,6 +212,7 @@ public class PedidosAction extends BaseAction {
 
 		BigDecimal valorConferido;
 		try {
+			// evitar tratar no back e sim no front
 			String formatado = valorTotalStr.replace("R$", "").replace(",", ".").trim();
 			valorConferido = new BigDecimal(formatado);
 		} catch (NumberFormatException e) {
@@ -254,8 +261,6 @@ public class PedidosAction extends BaseAction {
 		try (Connection conn = AppManager.getConnection()) {
 			PedidoService pedidoService = criarPedidoService(conn);
 			
-			
-
 			pedidoService.cancelarPedido(id);
 
 			output.setValue("mensagem", "Pedido #" + id + " cancelado com sucesso e estoque estornado.");
@@ -271,8 +276,9 @@ public class PedidosAction extends BaseAction {
 
 	public String excluirItem() {
 		Long pedidoId = input.getLong("idPedido");
-		
+		output.setValue("id",pedidoId);
 		Long itemId = input.getLong("itemId");
+		
 
 		try (Connection conn = AppManager.getConnection()) {
 			PedidoService pedidoService = criarPedidoService(conn);
@@ -285,7 +291,10 @@ public class PedidosAction extends BaseAction {
 			
 	        if (pedido.getItens() == null || pedido.getItens().size() <= 1) {
 	            addError("erro", "O pedido possui apenas um item. Para retirá-lo, cancele o pedido por completo.");
+	            output.setValue("erro", "O pedido possui apenas um item. Para retirá-lo, cancele o pedido por completo.");
+
 	            return ERROR; 
+	            
 	        }
 			
 			output.setValue("mensagem", "Item removido do pedido com sucesso e estoque estornado.");

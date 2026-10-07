@@ -23,17 +23,7 @@ public enum FormaDePagamento {
 		return descricao;
 	}
 	
-	public static FormaDePagamento fromString(String statusTexto) {
-        if (statusTexto == null || statusTexto.trim().isEmpty()) {
-            return null;
-        }
-        for (FormaDePagamento sp : values()) {
-            if (sp.name().equalsIgnoreCase(statusTexto.trim())) {
-                return sp;
-            }
-        }
-        throw new IllegalArgumentException("Status desconhecido: " + statusTexto);
-    }
+	
 	
 	
 }
