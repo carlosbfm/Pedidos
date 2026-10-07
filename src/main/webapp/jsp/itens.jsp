@@ -64,18 +64,24 @@ th {
 	user-select: none;
 }
 
-button {
-	display: flex flex-direction: left;
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	margin-top: 14px;
 	padding: 10px 16px;
+	font-family: Arial, sans-serif;
 	font-size: 14px;
 	font-weight: bold;
 	color: #ffffff;
 	background-color: #0275d8;
-	border: none;
+	border: 1px solid transparent;
 	border-radius: 4px;
+	text-decoration: none;
 	cursor: pointer;
-	transition: background-color 0.2s ease;
+	box-sizing: border-box;
+	line-height: normal;
+	transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .btn-icone-excluir {
@@ -107,9 +113,7 @@ button {
 </head>
 <body>
 
-	<form action="itens.salvar.mtw" method="GET" style="display: inline;">
-		<button type="submit">NOVO ITEM+</button>
-	</form>
+	<a href="itens.novo.mtw" class="btn">NOVO ITEM+</a>
 
 	<table>
 		<thead>

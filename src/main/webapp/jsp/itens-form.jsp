@@ -127,7 +127,7 @@ button{
 		<button type="submit">Voltar</button>
 	</form>
 	
-	<mtw:form action="itens.cadastro.mtw" method="POST" >
+	<mtw:form action="itens.salvar.mtw" method="POST" >
 
 		<label>Nome do Item:</label>
 		<mtw:input type="text" name="itemNome" size="30" maxlength="30" />

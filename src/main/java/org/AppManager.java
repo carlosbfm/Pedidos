@@ -44,11 +44,16 @@ public class AppManager extends ApplicationManager {
 		action("/itens", ItemAction.class, "atualizarItem")
 		.on(SUCCESS, redir("itens.exibir.mtw")) 
 		.addConsequence(ERROR, fwd("jsp/itens-update.jsp"));
-
+		
+		// Rota de entrada: Apenas abre o formulário
+		action("/itens", ItemAction.class, "novo")
+		    .on(SUCCESS, fwd("jsp/itens-form.jsp"));
+		
 		action("/itens", ItemAction.class, "salvar")
-		.on(SUCCESS, fwd("jsp/itens-form.jsp"))
+		.on(SUCCESS, redir("itens.exibir.mtw"))
 		.addConsequence(ERROR, fwd("jsp/itens-form.jsp"));
 
+		//excluir itens
 		action("/itens", ItemAction.class, "excluir")
 		.on(SUCCESS, redir("itens.exibir.mtw"))
 		.addConsequence(ERROR, fwd("jsp/itens.jsp"));
@@ -67,7 +72,7 @@ public class AppManager extends ApplicationManager {
 
 		action("/form", PedidosAction.class, "exibirDados")
 		    .on(SUCCESS, fwd("jsp/pedidos-form.jsp"))
-		    .on(ERROR, fwd("jsp/pedidos.jsp"));
+		    .on(ERROR, redir("/tabela.exibir.mtw"));
 
 		action("/form", PedidosAction.class, "criarPedido")
 		    .on(SUCCESS, redir("tabela.exibir.mtw"))
@@ -96,7 +101,7 @@ public class AppManager extends ApplicationManager {
 		
 		action("/form", PedidosAction.class, "excluirItem")
 	    .on(SUCCESS, fwd("jsp/pedidos-update.jsp"))
-	    .on(ERROR, fwd("jsp/pedidos-update.jsp"));
+	    .on(ERROR, redir("/form.detalhes.mtw", true));
 	}
 
 	private static ConnectionHandler pool;
