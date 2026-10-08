@@ -309,7 +309,7 @@ button:hover {
 			</div>
 		</c:if>
 
-		
+
 	</div>
 
 </body>

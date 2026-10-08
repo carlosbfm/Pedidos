@@ -130,6 +130,7 @@ public class PedidosAction extends BaseAction {
 
 	        pedidoService.criarPedido(pedido);
 
+	        // evitar fazer a chamada de objeto por questão de seguraça da entidade
 	        output.setValue("pedido", pedido);
 	        output.setValue("mensagem", "Pedido #" + pedido.getId() + " cadastrado com sucesso!");
 	        
@@ -144,8 +145,15 @@ public class PedidosAction extends BaseAction {
 	}
 	
 	public String detalhes() {
+		
 		Long id = input.getLong("id");
-		addError("erro",input.getString("erro"));
+		
+		String erroParam = input.getString("erro");
+		if (erroParam != null && !erroParam.trim().isEmpty()) {
+		    addError("erro", erroParam);
+		}
+	
+		
 		//System.out.println(input.getString("erro"));
 		
 

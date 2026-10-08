@@ -29,7 +29,6 @@ body {
 	font-size: 24px;
 }
 
-/* Layout em Grid: Formulário (1fr) e Visualização/Tabela (1.4fr) */
 .grid-container {
 	display: grid;
 	grid-template-columns: 1fr 1.4fr;

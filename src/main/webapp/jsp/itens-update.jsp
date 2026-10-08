@@ -6,7 +6,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Editar Item</title>
-<!-- Bootstrap Icons para os símbolos de + e - -->
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
@@ -72,7 +71,6 @@ h2 {
 	outline: none;
 }
 
-/* Container do Stepper de Quantidade */
 .quantidade-stepper {
 	display: flex;
 	align-items: center;

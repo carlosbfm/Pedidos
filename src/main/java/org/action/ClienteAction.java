@@ -49,7 +49,7 @@ public class ClienteAction extends BaseAction {
 		}
 	}
 
-	public String cadastro() {
+	public String salvar() {
 
 
 		if(isPost()) {

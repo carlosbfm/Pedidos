@@ -124,7 +124,7 @@ button {
 <body>
 
 
-	<form action="clientes.cadastro.mtw" method="GET"
+	<form action="clientes.salvar.mtw" method="GET"
 		style="display: inline;">
 		<button type="submit">NOVO CLIENTE +</button>
 	</form>

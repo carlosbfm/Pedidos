@@ -135,7 +135,7 @@ button {
 			<button type="submit">Voltar</button>
 		</form>
 		
-		<mtw:form action="clientes.cadastro.mtw" method="POST">
+		<mtw:form action="clientes.salvar.mtw" method="POST">
 			<h2>Cadastro de Cliente</h2>
 
 			<label>Nome do cliente:</label>
